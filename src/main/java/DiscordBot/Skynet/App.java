@@ -1,6 +1,12 @@
 package DiscordBot.Skynet;
 
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Scanner;
+
 import javax.security.auth.login.LoginException;
 
 import net.dv8tion.jda.core.AccountType;
@@ -17,7 +23,8 @@ public class App extends ListenerAdapter
 {
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException
     {
-        JDA bot = new JDABuilder(AccountType.BOT).setToken("").buildBlocking(); //SET TOKEN
+        JDA bot = new JDABuilder(AccountType.BOT).setToken(inputToken()).buildBlocking(); //SET TOKEN
+        bot.addEventListener(new App());
     }
     
     @Override 
@@ -27,50 +34,82 @@ public class App extends ListenerAdapter
         MessageChannel objChannel = e.getChannel();
         User objUser = e.getAuthor();   
         String commandarray[] = objMsg.getContent().split(" ", 2);
-        if (objMsg.getContent().substring(0,2) == "//")
+        if (objMsg.getContent().substring(0,2).equals("//"))
         {
         	callCommand(commandarray, objMsg, objChannel, objUser);
         }
     }
-    public void quote(MessageChannel objChannel)
+    private void quote(MessageChannel objChannel) 
     {
-    	//todo
-    }
-    
-    public void quoteMe(String quote, MessageChannel objChannel)
-    {
-    	//todo
-    }
-    
-    public void playSong(String songurl, MessageChannel objChannel)
-    {
-    	//todo
-    }
-    
-    
-    public void playlist(String playlisturl, MessageChannel objChannel)
-    {
-    	//todo
-    }
-    
-    public void flipCoin(String calledside, MessageChannel objChannel, User objUser)
-    {
-    	if (!calledside.equals("heads") || !calledside.equals("tails"))
+    	String path = "quoteFile.txt";
+    	try
     	{
-    		objChannel.sendMessage(calledside + " is not heads or tails bud, try again.");
-    		return;
-    	}
-    	int Random = (int)(Math.random()*2);
-    	if (Random == 1 && calledside.equals("heads") || Random == 0 && calledside.equals("tails"))
+    		BufferedReader textreader = new BufferedReader(new FileReader(path));
+    		int numberoflines = 0;
+    		while(textreader.readLine() != null)
+    		{
+    			numberoflines ++;
+    		}
+    		textreader.close();
+    		String[] quotearray = new String[numberoflines]; 
+    		BufferedReader textreaderforquotes = new BufferedReader(new FileReader(path));
+    		for(int i = 0; i < numberoflines; i++)
+    		{
+    			quotearray[i] = textreaderforquotes.readLine();
+    		}
+    		objChannel.sendMessage(quotearray[(int)(Math.random()*numberoflines)]).queue();
+    		textreaderforquotes.close();
+    		
+    	}  	
+    	catch(IOException e) 
     	{
-    		objChannel.sendMessage(objUser.getName() + " called the side correctly");
-    		return;
+    		objChannel.sendMessage("Somethng went wrong, missing quotefile string").queue();
     	}
-    	objChannel.sendMessage(objUser.getName() + " called the side incorrectly");
+
+    	
+    }
+    
+    private void quoteMe(String quote, MessageChannel objChannel)
+    {
+    	//todo
+    }
+    
+    private void playSong(String songurl, MessageChannel objChannel)
+    {
+    	//todo
     }
     
     
-    public void callCommand(String[] commandarray, Message objMsg, MessageChannel objChannel, User objUser)
+    private void playlist(String playlisturl, MessageChannel objChannel)
+    {
+    	//todo
+    }
+    
+    private void flipCoin(String calledside, MessageChannel objChannel, User objUser)
+    {
+    	if (calledside.equals("heads") || calledside.equals("tails"))
+    	{
+    		int Random = (int)(Math.random()*2);
+        	if (Random == 1 && calledside.equals("heads") || Random == 0 && calledside.equals("tails"))
+        	{
+        		objChannel.sendMessage(objUser.getName() + " called the side CORRECTLY").queue();
+        		return;
+        	}
+        	objChannel.sendMessage(objUser.getName() + " called the side INCORRECTLY").queue();
+    	}
+		objChannel.sendMessage(calledside + " is not heads or tails bud, try again.").queue();
+    	
+    }
+    
+    private static String inputToken()
+    {
+    	System.out.println("Enter your bot token: ");
+    	Scanner scanner = new Scanner(System.in);
+    	return scanner.nextLine();
+    }
+    
+    
+    private void callCommand(String[] commandarray, Message objMsg, MessageChannel objChannel, User objUser)
     {
     	if (commandarray[0].equalsIgnoreCase("//quote"))
     	{
@@ -84,7 +123,7 @@ public class App extends ListenerAdapter
     		}
     		catch(Exception exception) //FIX EXCEPTION CONDTION
     		{
-    			objChannel.sendMessage("No quote specified, try again");
+    			objChannel.sendMessage("No quote specified, try again").queue();
     		}
     	}
     	else if(commandarray[0].equalsIgnoreCase("//play"))
@@ -95,7 +134,7 @@ public class App extends ListenerAdapter
     		}
     		catch(Exception exception) //FIX EXCEPTION CONDTION
     		{
-    			objChannel.sendMessage("No song specified, try again");
+    			objChannel.sendMessage("No song specified, try again").queue();
     		}
     	}
     	else if(commandarray[0].equalsIgnoreCase("//playlistYT"))
@@ -106,7 +145,7 @@ public class App extends ListenerAdapter
     		}
     		catch(Exception exception) //FIX EXCEPTION CONDTION
     		{
-    			objChannel.sendMessage("No youtube playlist specified, try again");
+    			objChannel.sendMessage("No youtube playlist specified, try again").queue();
     		}
     	}
     	else if(commandarray[0].equalsIgnoreCase("//flipcoin"))
@@ -117,7 +156,7 @@ public class App extends ListenerAdapter
     		}
     		catch(Exception exception) //FIX EXCEPTION CONDTION
     		{
-    			objChannel.sendMessage("Please call heads or tails before flipping.");
+    			objChannel.sendMessage("Please call heads or tails before flipping.").queue();
     		}
     	}
     }
