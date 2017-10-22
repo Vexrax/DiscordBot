@@ -1,6 +1,5 @@
 package DiscordBot.Skynet;
 
-import java.lang.reflect.Array;
 
 import javax.security.auth.login.LoginException;
 
@@ -30,31 +29,98 @@ public class App extends ListenerAdapter
         String commandarray[] = objMsg.getContent().split(" ", 2);
         if (objMsg.getContent().substring(0,2) == "//")
         {
-        	if (commandarray[0].equalsIgnoreCase("//quote"))
-        	{
-        		quote();
-        	}
-        	if(commandarray[0].equalsIgnoreCase("//quoteme"))
-        	{
-        		try
-        		{
-        			quoteMe(commandarray[0]);
-        		}
-        		catch(Exception exception) //FIX EXCEPTION CONDTION
-        		{
-        			objChannel.sendMessage("No quote specified, try again");
-        		}
-        	}
-        		
+        	callCommand(commandarray, objMsg, objChannel, objUser);
         }
     }
-    public void quote()
+    public void quote(MessageChannel objChannel)
     {
     	//todo
     }
-    public void quoteMe(String quote)
+    
+    public void quoteMe(String quote, MessageChannel objChannel)
     {
     	//todo
     }
+    
+    public void playSong(String songurl, MessageChannel objChannel)
+    {
+    	//todo
+    }
+    
+    
+    public void playlist(String playlisturl, MessageChannel objChannel)
+    {
+    	//todo
+    }
+    
+    public void flipCoin(String calledside, MessageChannel objChannel, User objUser)
+    {
+    	if (!calledside.equals("heads") || !calledside.equals("tails"))
+    	{
+    		objChannel.sendMessage(calledside + " is not heads or tails bud, try again.");
+    		return;
+    	}
+    	int Random = (int)(Math.random()*2);
+    	if (Random == 1 && calledside.equals("heads") || Random == 0 && calledside.equals("tails"))
+    	{
+    		objChannel.sendMessage(objUser.getName() + " called the side correctly");
+    		return;
+    	}
+    	objChannel.sendMessage(objUser.getName() + " called the side incorrectly");
+    }
+    
+    
+    public void callCommand(String[] commandarray, Message objMsg, MessageChannel objChannel, User objUser)
+    {
+    	if (commandarray[0].equalsIgnoreCase("//quote"))
+    	{
+    		quote(objChannel);
+    	}
+    	else if(commandarray[0].equalsIgnoreCase("//quoteme"))
+    	{
+    		try
+    		{
+    			quoteMe(commandarray[1], objChannel);
+    		}
+    		catch(Exception exception) //FIX EXCEPTION CONDTION
+    		{
+    			objChannel.sendMessage("No quote specified, try again");
+    		}
+    	}
+    	else if(commandarray[0].equalsIgnoreCase("//play"))
+    	{
+    		try
+    		{
+    			playSong(commandarray[1], objChannel);
+    		}
+    		catch(Exception exception) //FIX EXCEPTION CONDTION
+    		{
+    			objChannel.sendMessage("No song specified, try again");
+    		}
+    	}
+    	else if(commandarray[0].equalsIgnoreCase("//playlistYT"))
+    	{
+    		try
+    		{
+    			playlist(commandarray[1], objChannel);
+    		}
+    		catch(Exception exception) //FIX EXCEPTION CONDTION
+    		{
+    			objChannel.sendMessage("No youtube playlist specified, try again");
+    		}
+    	}
+    	else if(commandarray[0].equalsIgnoreCase("//flipcoin"))
+    	{
+    		try
+    		{
+    			flipCoin(commandarray[1], objChannel, objUser);
+    		}
+    		catch(Exception exception) //FIX EXCEPTION CONDTION
+    		{
+    			objChannel.sendMessage("Please call heads or tails before flipping.");
+    		}
+    	}
+    }
+    
 }
 
