@@ -9,18 +9,23 @@ import java.util.Scanner;
 
 import javax.security.auth.login.LoginException;
 
+import music.MusicManager;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class App extends ListenerAdapter
 {
+	final MusicManager manager = new MusicManager();
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException
     {
         JDA bot = new JDABuilder(AccountType.BOT).setToken(inputToken()).buildBlocking(); //SET TOKEN
@@ -33,10 +38,12 @@ public class App extends ListenerAdapter
         Message objMsg = e.getMessage();
         MessageChannel objChannel = e.getChannel();
         User objUser = e.getAuthor();   
+        TextChannel objTextChannel = e.getTextChannel();
+        Guild objGuild = e.getGuild();
         String commandarray[] = objMsg.getContent().split(" ", 2);
         if (objMsg.getContent().substring(0,2).equals("//"))
         {
-        	callCommand(commandarray, objMsg, objChannel, objUser);
+        	callCommand(commandarray, objMsg, objChannel, objUser, objTextChannel, objGuild);
         }
     }
     private void quote(MessageChannel objChannel) 
@@ -64,9 +71,7 @@ public class App extends ListenerAdapter
     	catch(IOException e) 
     	{
     		objChannel.sendMessage("Somethng went wrong, missing quotefile string").queue();
-    	}
-
-    	
+    	} 	
     }
     
     private void quoteMe(String quote, MessageChannel objChannel)
@@ -74,9 +79,22 @@ public class App extends ListenerAdapter
     	//todo
     }
     
-    private void playSong(String songurl, MessageChannel objChannel)
+    private void playSong(Guild guild, TextChannel textchannel, User user, String command)
     {
-    	//todo
+		if(guild == null)
+		{
+			return;
+		}
+		if(!guild.getAudioManager().isConnected() && !guild.getAudioManager().isAttemptingToConnect())
+		{
+			VoiceChannel voicechannel = guild.getMember(user).getVoiceState().getChannel();
+			if(voicechannel == null)
+			{
+				textchannel.sendMessage("boi join a channel first").queue();
+			}
+			guild.getAudioManager().openAudioConnection(voicechannel);
+		}
+		manager.loadTrack(textchannel, command);
     }
     
     
@@ -96,6 +114,7 @@ public class App extends ListenerAdapter
         		return;
         	}
         	objChannel.sendMessage(objUser.getName() + " called the side INCORRECTLY").queue();
+        	return;
     	}
 		objChannel.sendMessage(calledside + " is not heads or tails bud, try again.").queue();
     	
@@ -109,8 +128,8 @@ public class App extends ListenerAdapter
     }
     
     
-    private void callCommand(String[] commandarray, Message objMsg, MessageChannel objChannel, User objUser)
-    {
+    private void callCommand(String[] commandarray, Message objMsg, MessageChannel objChannel, User objUser, TextChannel objTextChannel, Guild objGuild)
+    {    	
     	if (commandarray[0].equalsIgnoreCase("//quote"))
     	{
     		quote(objChannel);
@@ -130,7 +149,7 @@ public class App extends ListenerAdapter
     	{
     		try
     		{
-    			playSong(commandarray[1], objChannel);
+    			playSong(objGuild, objTextChannel, objUser, commandarray[1]);
     		}
     		catch(Exception exception) //FIX EXCEPTION CONDTION
     		{

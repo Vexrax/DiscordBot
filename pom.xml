@@ -16,6 +16,11 @@
 
   <dependencies>
     <dependency>
+		<groupId>com.sedmelluq</groupId>
+		<artifactId>lavaplayer</artifactId>
+		<version>1.2.42</version>
+	</dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
@@ -28,6 +33,11 @@
 	</dependency>
   </dependencies>
   <repositories>
+    <repository>
+		<id>central</id>
+		<name>bintray</name>
+		<url>http://jcenter.bintray.com</url>
+	</repository>
 	<repository>
 		<id>jcenter</id>
 		<name>jcenter-bintray</name>
