@@ -10,6 +10,7 @@ import java.util.Scanner;
 import javax.security.auth.login.LoginException;
 
 import music.MusicManager;
+import music.MusicPlayer;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -96,11 +97,37 @@ public class App extends ListenerAdapter
 		}
 		manager.loadTrack(textchannel, command);
     }
-    
-    
-    private void playlist(String playlisturl, MessageChannel objChannel)
+    private void skipSong(Guild guild, TextChannel textchannel)
     {
-    	//todo
+    	if(!guild.getAudioManager().isConnected() && !guild.getAudioManager().isAttemptingToConnect())
+    	{
+    		textchannel.sendMessage("Player is not currently playing song").queue();
+    		return;
+    	}
+    	manager.getPlayer(guild).skipTrack();
+    	textchannel.sendMessage("Skipping current song").queue();
+    }
+    private void clearSongs(TextChannel textchannel)
+    {
+    	MusicPlayer player = manager.getPlayer(textchannel.getGuild());
+    	if(player.getListener().getTracks().isEmpty())
+    	{
+    		textchannel.sendMessage("boi your playlist is already empty").queue();
+    		return;
+    	}
+    	player.getListener().getTracks().clear();
+    	textchannel.sendMessage("Playlist cleared").queue();
+    	
+    	
+    }
+    private void songPlaying(Guild guild, TextChannel textchannel) //fix
+    {
+    	if(!guild.getAudioManager().isConnected() && !guild.getAudioManager().isAttemptingToConnect())
+    	{
+    		textchannel.sendMessage("Player is not currently playing song").queue();
+    		return;
+    	}
+    	textchannel.sendMessage("Currently playing " + manager.getPlayer(guild).getAudioPlayer().getPlayingTrack().toString()).queue();
     }
     
     private void flipCoin(String calledside, MessageChannel objChannel, User objUser)
@@ -156,17 +183,6 @@ public class App extends ListenerAdapter
     			objChannel.sendMessage("No song specified, try again").queue();
     		}
     	}
-    	else if(commandarray[0].equalsIgnoreCase("//playlistYT"))
-    	{
-    		try
-    		{
-    			playlist(commandarray[1], objChannel);
-    		}
-    		catch(Exception exception) //FIX EXCEPTION CONDTION
-    		{
-    			objChannel.sendMessage("No youtube playlist specified, try again").queue();
-    		}
-    	}
     	else if(commandarray[0].equalsIgnoreCase("//flipcoin"))
     	{
     		try
@@ -177,6 +193,18 @@ public class App extends ListenerAdapter
     		{
     			objChannel.sendMessage("Please call heads or tails before flipping.").queue();
     		}
+    	}
+    	else if(commandarray[0].equalsIgnoreCase("//skip"))
+    	{
+    		skipSong(objGuild, objTextChannel);
+    	}
+    	else if(commandarray[0].equalsIgnoreCase("//clear"))
+    	{
+    		clearSongs(objTextChannel);
+    	}
+    	else if(commandarray[0].equalsIgnoreCase("//playing"))
+    	{
+    		songPlaying(objGuild, objTextChannel);
     	}
     }
     

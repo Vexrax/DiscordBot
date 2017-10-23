@@ -40,7 +40,7 @@ public class MusicManager
 		{
 			public void trackLoaded(AudioTrack track)
 			{
-				channel.sendMessage(track.getInfo().title + "being added to playlist").queue();
+				channel.sendMessage(track.getInfo().title + " being added to playlist").queue();
 				player.playTrack(track);
 			}
 
@@ -62,7 +62,7 @@ public class MusicManager
 				for(int i = 0; i < playlist.getTracks().size() && i < 5; i++)
 				{
 					AudioTrack track = playlist.getTracks().get(i);
-					builder.append("\n **->**").append(track.getInfo().title);
+					builder.append("\n").append("->**" + track.getInfo().title + "**");
 					player.playTrack(track);
 				}
 				channel.sendMessage(builder.toString()).queue();
