@@ -3,6 +3,7 @@ package pokemon;
 public class Pokemon 
 {
 	private String name;
+	private String[] type;
 	private int health_points;
 	private int attack;
 	private int defense;
@@ -12,9 +13,10 @@ public class Pokemon
 	private Move[] moves;
 	private Status status;
 
-	public Pokemon(String name, int health, int attack, int defense, int sp_attack, int sp_defense, int speed, Move[] moves, Status status)
+	public Pokemon(String name, String[] type, int health, int attack, int defense, int sp_attack, int sp_defense, int speed, Move[] moves, Status status)
 	{
 		this.setName(name);
+		this.type = type;
 		this.setHealth_points(health);
 		this.setAttack(attack);
 		this.setDefense(defense);
@@ -23,6 +25,23 @@ public class Pokemon
 		this.setSpeed(speed);
 		this.moves = moves;
 		this.setStatus(status);			
+	}
+	public Pokemon() //ONLY FOR USE IN TESTING DELETE AFTER COMPLETE
+	{
+		this.setName("me");
+		this.type[0] = "dragon";
+		this.type[1] = "dark";
+		this.setHealth_points(1000);
+		this.setAttack(300);
+		this.setDefense(300);
+		this.setSp_attack(300);
+		this.setSp_defense(300);
+		this.setSpeed(300);
+		this.moves[0] = new Move( "some attack",100, "dragon" , 10, 1);
+		this.moves[1] = new Move( "some attack",100, "dragon" , 10, 1);
+		this.moves[2] = new Move( "some attack",100, "dragon" , 10, 1);
+		this.moves[3] = new Move( "some attack",100, "dragon" , 10, 1);
+		this.setStatus(new Status("none"));	
 	}
 	public void setName(String name)
 	{
