@@ -71,7 +71,7 @@ public class App extends ListenerAdapter
     	}  	
     	catch(IOException e) 
     	{
-    		objChannel.sendMessage("Somethng went wrong, missing quotefile string").queue();
+    		objChannel.sendMessage("Somethng went wrong, missing quotefile string, check App.java").queue();
     	} 	
     }
     
@@ -91,7 +91,7 @@ public class App extends ListenerAdapter
 			VoiceChannel voicechannel = guild.getMember(user).getVoiceState().getChannel();
 			if(voicechannel == null)
 			{
-				textchannel.sendMessage("boi join a channel first").queue();
+				textchannel.sendMessage("You must join a channel first").queue();
 			}
 			guild.getAudioManager().openAudioConnection(voicechannel);
 		}
@@ -101,7 +101,7 @@ public class App extends ListenerAdapter
     {
     	if(!guild.getAudioManager().isConnected() && !guild.getAudioManager().isAttemptingToConnect())
     	{
-    		textchannel.sendMessage("Player is not currently playing song").queue();
+    		textchannel.sendMessage("Player is not currently playing song.").queue();
     		return;
     	}
     	manager.getPlayer(guild).skipTrack();
@@ -112,11 +112,11 @@ public class App extends ListenerAdapter
     	MusicPlayer player = manager.getPlayer(textchannel.getGuild());
     	if(player.getListener().getTracks().isEmpty())
     	{
-    		textchannel.sendMessage("boi your playlist is already empty").queue();
+    		textchannel.sendMessage("Your playlist is already empty.").queue();
     		return;
     	}
     	player.getListener().getTracks().clear();
-    	textchannel.sendMessage("Playlist cleared").queue();
+    	textchannel.sendMessage("Playlist cleared.").queue();
     	
     	
     }
@@ -124,7 +124,7 @@ public class App extends ListenerAdapter
     {
     	if(!guild.getAudioManager().isConnected() && !guild.getAudioManager().isAttemptingToConnect())
     	{
-    		textchannel.sendMessage("Player is not currently playing song").queue();
+    		textchannel.sendMessage("Player is not currently playing song.").queue();
     		return;
     	}
     	textchannel.sendMessage("Currently playing " + manager.getPlayer(guild).getAudioPlayer().getPlayingTrack().toString()).queue();
@@ -145,6 +145,16 @@ public class App extends ListenerAdapter
     	}
 		objChannel.sendMessage(calledside + " is not heads or tails bud, try again.").queue();
     	
+    }
+    private void rollDice(MessageChannel objChannel)
+    {
+    	objChannel.sendMessage("You rolled a " + (int)(Math.random()*6)).queue();
+    }
+    
+    private void joke(MessageChannel objChannel)
+    {
+    	objChannel.sendMessage("%joke").queue();
+    	//make this not piggyback off areks bot eventually
     }
     
     private static String inputToken()
@@ -206,7 +216,16 @@ public class App extends ListenerAdapter
     	{
     		songPlaying(objGuild, objTextChannel);
     	}
+    	else if(commandarray[0].equalsIgnoreCase("//dice"))
+    	{
+    		rollDice(objChannel);
+    	}
+    	else if(commandarray[0].equalsIgnoreCase("//joke"))
+    	{
+    		joke(objChannel);
+    	}
     }
     
 }
+
 
