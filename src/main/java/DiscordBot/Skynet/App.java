@@ -41,11 +41,17 @@ public class App extends ListenerAdapter
         User objUser = e.getAuthor();   
         TextChannel objTextChannel = e.getTextChannel();
         Guild objGuild = e.getGuild();
-        String commandarray[] = objMsg.getContent().split(" ", 2);
-        if (objMsg.getContent().substring(0,2).equals("//"))
+        String commandarray[];
+        try
         {
-        	callCommand(commandarray, objMsg, objChannel, objUser, objTextChannel, objGuild);
+        	commandarray = objMsg.getContent().split(" ", 2);
+            if (objMsg.getContent().substring(0,2).equals("//"))
+            {
+            	callCommand(commandarray, objMsg, objChannel, objUser, objTextChannel, objGuild);
+            }
         }
+        catch(StringIndexOutOfBoundsException exception)
+        {}
     }
     private void quote(MessageChannel objChannel) 
     {
@@ -156,6 +162,10 @@ public class App extends ListenerAdapter
     	objChannel.sendMessage("%joke").queue();
     	//make this not piggyback off areks bot eventually
     }
+    private void pokemonBattle()
+    {
+    	//todo
+    }
     
     private static String inputToken()
     {
@@ -163,7 +173,6 @@ public class App extends ListenerAdapter
     	Scanner scanner = new Scanner(System.in);
     	return scanner.nextLine();
     }
-    
     
     private void callCommand(String[] commandarray, Message objMsg, MessageChannel objChannel, User objUser, TextChannel objTextChannel, Guild objGuild)
     {    	
