@@ -162,9 +162,9 @@ public class App extends ListenerAdapter
     	objChannel.sendMessage("%joke").queue();
     	//make this not piggyback off areks bot eventually
     }
-    private void pokemonBattle()
+    private void pokemonBattle(Guild guild, TextChannel textchannel, User user, String command)
     {
-    	//todo
+    	playSong(guild, textchannel, user, command);
     }
     
     private static String inputToken()
@@ -232,6 +232,10 @@ public class App extends ListenerAdapter
     	else if(commandarray[0].equalsIgnoreCase("//joke"))
     	{
     		joke(objChannel);
+    	}
+    	else if(commandarray[0].equalsIgnoreCase("//pokemonbattle"))
+    	{
+    		pokemonBattle(objGuild, objTextChannel, objUser, "https://www.youtube.com/watch?v=8Cw3vfuHh_A");
     	}
     }
     

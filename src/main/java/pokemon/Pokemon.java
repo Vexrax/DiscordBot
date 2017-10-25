@@ -4,31 +4,36 @@ public class Pokemon
 {
 	private String name;
 	private String[] type;
+	private int gender;
 	private int health_points;
 	private int attack;
 	private int defense;
 	private int sp_attack;
 	private int sp_defense;
 	private int speed;
+	private double accuracy;
 	private Move[] moves;
 	private Status status;
 
-	public Pokemon(String name, String[] type, int health, int attack, int defense, int sp_attack, int sp_defense, int speed, Move[] moves, Status status)
+	public Pokemon(String name, String[] type, int gender, int health, int attack, int defense, int sp_attack, int sp_defense, int speed, double accuracy, Move[] moves, Status status)
 	{
 		this.setName(name);
 		this.type = type;
+		this.gender = gender;
 		this.setHealth_points(health);
 		this.setAttack(attack);
 		this.setDefense(defense);
 		this.setSp_attack(sp_attack);
 		this.setSp_defense(sp_defense);
 		this.setSpeed(speed);
+		this.accuracy = accuracy;
 		this.moves = moves;
 		this.setStatus(status);			
 	}
 	public Pokemon() //ONLY FOR USE IN TESTING DELETE AFTER COMPLETE
 	{
 		this.setName("me");
+		this.gender = 1;
 		this.type[0] = "dragon";
 		this.type[1] = "dark";
 		this.setHealth_points(1000);
@@ -37,11 +42,12 @@ public class Pokemon
 		this.setSp_attack(300);
 		this.setSp_defense(300);
 		this.setSpeed(300);
-		this.moves[0] = new Move( "some attack",100, "dragon" , 10, 1);
-		this.moves[1] = new Move( "some attack",100, "dragon" , 10, 1);
-		this.moves[2] = new Move( "some attack",100, "dragon" , 10, 1);
-		this.moves[3] = new Move( "some attack",100, "dragon" , 10, 1);
+		this.moves[0] = new Move( "some attack",100, "dragon" , 10, 1, 1.00);
+		this.moves[1] = new Move( "some attack",100, "dragon" , 10, 1, .99);
+		this.moves[2] = new Move( "some attack",100, "dragon" , 10, 1, .99);
+		this.moves[3] = new Move( "some attack",100, "dragon" , 10, 1, .99);
 		this.setStatus(new Status("none"));	
+		this.setAccuracy(100);
 	}
 	public void setName(String name)
 	{
@@ -129,6 +135,14 @@ public class Pokemon
 		this.status = status;
 	}
 	
+	public void setAccuracy(double accuracy)
+	{
+		this.accuracy += accuracy;
+	}
+	public double getAccuracy()
+	{
+		return this.accuracy;
+	}
 	public void onSwitchOut()
 	{
 		//fetch the default stats for the pokemon.

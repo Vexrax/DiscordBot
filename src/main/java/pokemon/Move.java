@@ -7,14 +7,16 @@ public class Move
 	private String type;
 	private int PP;
 	private int effect;
+	private double accuracy;
 	
-	Move(String name, int power, String type, int PP, int effect)
+	Move(String name, int power, String type, int PP, int effect, double accuraccy)
 	{
 		this.name = name;
 		this.power = power;
 		this.type = type;
 		this.PP = PP;
 		this.effect = effect;
+		this.accuracy = accuraccy;
 	}
 	
 	public int getPP()
