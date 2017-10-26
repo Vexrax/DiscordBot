@@ -7,10 +7,10 @@ public class Move
 	private String type;
 	private int PP;
 	private int effect;
-	private double accuracy;
+	private int accuracy;
 	private int specialorphysical;
 	
-	Move(String name, int power, String type, int PP, int effect, double accuraccy, int specialorphysical)
+	Move(String name, int power, String type, int PP, int effect, int accuraccy, String specialorphysical)
 	{
 		this.name = name;
 		this.power = power;
@@ -18,7 +18,12 @@ public class Move
 		this.PP = PP;
 		this.effect = effect;
 		this.accuracy = accuraccy;
-		this.specialorphysical = specialorphysical;
+		if(specialorphysical.equals("special"))
+			this.specialorphysical = 1;
+		else
+		{	
+			this.specialorphysical = 0;
+		}
 		
 	}
 	

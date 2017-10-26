@@ -7,6 +7,8 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import pokeAPI.MoveApi;
+import pokeAPI.Moves;
 import pokeAPI.PokeApi;
 
 public class BattleModel 
@@ -20,13 +22,13 @@ public class BattleModel
 	private int turn;
 	private static OkHttpClient client = new OkHttpClient();
 	
-	BattleModel(String trainer1, String trainer2)
+	public BattleModel(String trainer1, String trainer2)
 	{
 		this.trainer1 = trainer1;
 		this.trainer2 = trainer2;
-		this.team1 = setupRandomTeam();
-		this.team2 = setupRandomTeam();
-		startBattle();
+		//this.team1 = setupRandomTeam();
+		//this.team2 = setupRandomTeam();
+		//startBattle();
 	}
 	private Pokemon[] setupRandomTeam()
 	{
@@ -58,7 +60,7 @@ public class BattleModel
 						   Integer.parseInt(pokeApi.getStats()[1].toString()),
 						   Integer.parseInt(pokeApi.getStats()[0].toString()),
 						   1.00,
-						   generateMoves(),
+						   generateMoves(pokeApi),
 						   new Status("none", -1),
 						   checkAbility(),
 						   Integer.parseInt(pokeApi.getWeight()));
@@ -66,11 +68,38 @@ public class BattleModel
 	private int checkAbility()
 	{
 		//todo
+		//pick a ability from the ability set;
 		return 0;
 	}
-	private Move[] generateMoves()
+	@SuppressWarnings("unused")
+	private Move[] generateMoves(PokeApi pokeApi)
 	{
 		Move[] moves = new Move[4];
+		Moves[] listofmoves = pokeApi.getMoves();
+		for(int i = 0; i < 4; i++)
+		{
+			int chosenmove = (int)(Math.random()*listofmoves.length);
+			String move =  listofmoves[chosenmove].getMove().getName();
+			String json = "";
+			try 
+			{
+				json = getJson("https://pokeapi.co/api/v2/move/" + move +"/");
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+			}
+			Gson gson = new Gson();
+			MoveApi moveApi = gson.fromJson(json, MoveApi.class);
+			Move current_move = new Move(move, 
+										 Integer.parseInt(moveApi.getPower()),
+									     moveApi.getType().toString(),
+										 Integer.parseInt(moveApi.getPp()),
+										 0,  //needs to impliment effectlist
+										 Integer.parseInt(moveApi.getAccuracy()),
+										 moveApi.getDamage_class().getName());
+			moves[i] = current_move;
+		}
 		return moves;
 		//todo
 	}
@@ -104,7 +133,17 @@ public class BattleModel
 	public String toString()
 	{
 		//String repr of the pokemon battle.
-		return "todo";
+		return "|" +this.trainer1 +"|" + "                                        " + "|" +this.trainer2 +"|\n"
+			+  "|CURRENT POKEMON|                                        |CURRENT POKEMON|\n"
+			+  "{MOVE 1      1/1}                                        {MOVE 1      1/1}\n"
+			+  "{MOVE 2      1/1}                                        {MOVE 2      1/1}\n"
+			+  "{MOVE 3      1/1}                                        {MOVE 3      1/1}\n"
+			+  "{MOVE 4      1/1}                                        {MOVE 4      0/1}\n"
+			+  "|   POKEMON 2   |                                        |   POKEMON 2   |\n"
+			+  "|   POKEMON 3   |                                        |   POKEMON 3   |\n"
+			+  "|   POKEMON 4   |                                        |   POKEMON 4   |\n"
+			+  "|   POKEMON 5   |                                        |   POKEMON 5   |\n"
+			+  "|   POKEMON 6   |                                        |   POKEMON 6   |\n";
 	}
 	public static String getJson(String url) throws IOException 
 	{

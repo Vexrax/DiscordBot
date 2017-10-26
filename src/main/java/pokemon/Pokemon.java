@@ -46,10 +46,10 @@ public class Pokemon
 		this.setSp_attack(300);
 		this.setSp_defense(300);
 		this.setSpeed(300);
-		this.moves[0] = new Move( "some attack",100, "dragon" , 10, 1, 1.00, 0);
-		this.moves[1] = new Move( "some attack",100, "dragon" , 10, 1, .99, 0);
-		this.moves[2] = new Move( "some attack",100, "dragon" , 10, 1, .99, 0);
-		this.moves[3] = new Move( "some attack",100, "dragon" , 10, 1, .99, 0);
+		this.moves[0] = new Move( "some attack",100, "dragon" , 10, 1, 1, "special");
+		this.moves[1] = new Move( "some attack",100, "dragon" , 10, 1, 1, "special");
+		this.moves[2] = new Move( "some attack",100, "dragon" , 10, 1, 1, "special");
+		this.moves[3] = new Move( "some attack",100, "dragon" , 10, 1, 1, "notspecial");
 		this.setStatus(new Status("none"));	
 		this.setAccuracy(100);
 		this.ability = 1;

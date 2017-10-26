@@ -23,10 +23,12 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import pokemon.BattleModel;
 
 public class App extends ListenerAdapter
 {
 	final MusicManager manager = new MusicManager();
+	BattleModel battle;
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException
     {
         JDA bot = new JDABuilder(AccountType.BOT).setToken(inputToken()).buildBlocking(); //SET TOKEN
@@ -164,7 +166,11 @@ public class App extends ListenerAdapter
     }
     private void pokemonBattle(Guild guild, TextChannel textchannel, User user, String command)
     {
-    	playSong(guild, textchannel, user, command);
+    	if(command.equals("NewBattle") || battle.checkIfBattleWon())
+    		battle = new BattleModel("player1", "player2");
+    	textchannel.sendMessage(battle.toString()).queue();
+    	System.out.println("here");
+    	playSong(guild, textchannel, user, "https://www.youtube.com/watch?v=8Cw3vfuHh_A");
     }
     
     private static String inputToken()
@@ -235,7 +241,15 @@ public class App extends ListenerAdapter
     	}
     	else if(commandarray[0].equalsIgnoreCase("//pokemonbattle"))
     	{
-    		pokemonBattle(objGuild, objTextChannel, objUser, "https://www.youtube.com/watch?v=8Cw3vfuHh_A");
+    		try
+    		{
+    			pokemonBattle(objGuild, objTextChannel, objUser, commandarray[1]);
+    		}
+    		catch(Exception e)
+    		{
+    			objChannel.sendMessage("no").queue();
+    			System.out.println(e.getMessage());
+    		}
     	}
     }
     
