@@ -15,7 +15,7 @@ public class PokeApi
 
 	    private String is_default;
 
-	    private String[] held_items;
+	   //private String[] held_items;
 
 	    private String id;
 
@@ -97,15 +97,15 @@ public class PokeApi
 	        this.is_default = is_default;
 	    }
 
-	    public String[] getHeld_items ()
-	    {
-	        return held_items;
-	    }
+	   // public String[] getHeld_items ()
+	    //{
+	      //  return held_items;
+	    //}
 
-	    public void setHeld_items (String[] held_items)
-	    {
-	        this.held_items = held_items;
-	    }
+	   // public void setHeld_items (String[] held_items)
+	    //{
+	     //   this.held_items = held_items;
+	    //}
 
 	    public String getId ()
 	    {
@@ -216,6 +216,6 @@ public class PokeApi
 	    @Override
 	    public String toString()
 	    {
-	        return "ClassPojo [location_area_encounters = "+location_area_encounters+", weight = "+weight+", species = "+species+", stats = "+stats+", moves = "+moves+", is_default = "+is_default+", held_items = "+held_items+", id = "+id+", base_experience = "+base_experience+", height = "+height+", order = "+order+", abilities = "+abilities+", game_indices = "+game_indices+", name = "+name+", sprites = "+sprites+", types = "+types+", forms = "+forms+"]";
+	        return "ClassPojo [location_area_encounters = "+location_area_encounters+", weight = "+weight+", species = "+species+", stats = "+stats+", moves = "+moves+", is_default = "+is_default+", id = "+id+", base_experience = "+base_experience+", height = "+height+", order = "+order+", abilities = "+abilities+", game_indices = "+game_indices+", name = "+name+", sprites = "+sprites+", types = "+types+", forms = "+forms+"]";
 	    }
 }

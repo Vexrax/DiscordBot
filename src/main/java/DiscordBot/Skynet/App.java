@@ -12,6 +12,7 @@ import javax.security.auth.login.LoginException;
 import music.MusicManager;
 import music.MusicPlayer;
 import net.dv8tion.jda.core.AccountType;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -20,6 +21,8 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
+import net.dv8tion.jda.core.entities.impl.MessageEmbedImpl;
+import net.dv8tion.jda.core.events.message.MessageEmbedEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -27,6 +30,7 @@ import pokemon.BattleModel;
 
 public class App extends ListenerAdapter
 {
+	private static final char[][] CommandArray = null;
 	final MusicManager manager = new MusicManager();
 	BattleModel battle;
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException
@@ -168,9 +172,10 @@ public class App extends ListenerAdapter
     {
     	if(command.equals("NewBattle") || battle.checkIfBattleWon())
     		battle = new BattleModel("player1", "player2");
-    	textchannel.sendMessage(battle.toString()).queue();
-    	System.out.println("here");
-    	playSong(guild, textchannel, user, "https://www.youtube.com/watch?v=8Cw3vfuHh_A");
+    	EmbedBuilder builder = new EmbedBuilder();
+    	builder.setDescription(battle.toString());
+    	textchannel.sendMessage(builder.build()).queue();
+    	//playSong(guild, textchannel, user, "https://www.youtube.com/watch?v=8Cw3vfuHh_A");
     }
     
     private static String inputToken()
@@ -247,8 +252,7 @@ public class App extends ListenerAdapter
     		}
     		catch(Exception e)
     		{
-    			objChannel.sendMessage("no").queue();
-    			System.out.println(e.getMessage());
+    			objChannel.sendMessage(e.getMessage()).queue();
     		}
     	}
     }
