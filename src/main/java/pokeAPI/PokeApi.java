@@ -15,8 +15,6 @@ public class PokeApi
 
 	    private String is_default;
 
-	   //private String[] held_items;
-
 	    private String id;
 
 	    private String base_experience;
@@ -36,6 +34,12 @@ public class PokeApi
 	    private Types[] types;
 
 	    private Forms[] forms;
+	    
+	    private int[] intstat = new int[6];
+	    
+	    private String[] name_of_moves = new String[4];
+	    
+	    private MoveApi[] MoveData = new MoveApi[4];
 
 	    public String getLocation_area_encounters ()
 	    {
@@ -96,16 +100,6 @@ public class PokeApi
 	    {
 	        this.is_default = is_default;
 	    }
-
-	   // public String[] getHeld_items ()
-	    //{
-	      //  return held_items;
-	    //}
-
-	   // public void setHeld_items (String[] held_items)
-	    //{
-	     //   this.held_items = held_items;
-	    //}
 
 	    public String getId ()
 	    {
@@ -212,6 +206,36 @@ public class PokeApi
 	    	returnval[0] = this.types[0].toString();
 	    	returnval[1] = this.types[1].toString();
 	    	return returnval;
+	    }
+	    public void setIntStat(int stat)
+	    {
+	    	this.intstat[stat] = Integer.parseInt(this.stats[stat].getBase_stat());
+	    }
+	    public int getIntStat(int whichstat)
+	    {
+	    	//0 = speed
+	    	//1 = sp def
+	    	//2 = sp atc
+	    	//3 = def
+	    	//4 = attack
+	    	//5 = hp
+	    	return this.intstat[whichstat];
+	    }
+	    public int[] getIntStatAsList()
+	    {
+	    	return this.intstat;
+	    }
+	    public void setNameOfMoves(int move, String name)
+	    {
+	    	this.name_of_moves[move] = name;
+	    }
+	    public void setMoveData(int index, MoveApi move)
+	    {
+	    	this.MoveData[index] = move;
+	    }
+	    public MoveApi getMoveData(int index)
+	    {
+	    	return this.MoveData[index];
 	    }
 	    @Override
 	    public String toString()

@@ -6,11 +6,7 @@ public class MoveApi
 
 	    private Effect_entries[] effect_entries;
 
-	    private String[] effect_changes;
-
 	    private Damage_class damage_class;
-
-	    private Contest_type contest_type;
 
 	    private Type type;
 
@@ -18,13 +14,11 @@ public class MoveApi
 
 	    private Machines[] machines;
 
-	    private String[] past_values;
-
 	    private String id;
 
 	    private double effect_chance;
 
-	    private String[] stat_changes;
+	    //private String[] stat_changes;
 
 	    private Names[] names;
 
@@ -36,17 +30,13 @@ public class MoveApi
 
 	    private String power;
 
-	    private Contest_effect contest_effect;
-
-	    private Super_contest_effect super_contest_effect;
-
 	    private String pp;
 
 	    private String accuracy;
 
 	    private Generation generation;
-
-	    private Contest_combos contest_combos;
+	    
+	    private Ailment ailment;
 
 	    public Flavor_text_entries[] getFlavor_text_entries ()
 	    {
@@ -68,16 +58,6 @@ public class MoveApi
 	        this.effect_entries = effect_entries;
 	    }
 
-	    public String[] getEffect_changes ()
-	    {
-	        return effect_changes;
-	    }
-
-	    public void setEffect_changes (String[] effect_changes)
-	    {
-	        this.effect_changes = effect_changes;
-	    }
-
 	    public Damage_class getDamage_class ()
 	    {
 	        return damage_class;
@@ -88,15 +68,6 @@ public class MoveApi
 	        this.damage_class = damage_class;
 	    }
 
-	    public Contest_type getContest_type ()
-	    {
-	        return contest_type;
-	    }
-
-	    public void setContest_type (Contest_type contest_type)
-	    {
-	        this.contest_type = contest_type;
-	    }
 
 	    public Type getType ()
 	    {
@@ -128,15 +99,6 @@ public class MoveApi
 	        this.machines = machines;
 	    }
 
-	    public String[] getPast_values ()
-	    {
-	        return past_values;
-	    }
-
-	    public void setPast_values (String[] past_values)
-	    {
-	        this.past_values = past_values;
-	    }
 
 	    public String getId ()
 	    {
@@ -158,7 +120,7 @@ public class MoveApi
 	        this.effect_chance = effect_chance;
 	    }
 
-	    public String[] getStat_changes ()
+	    /*public String[] getStat_changes ()
 	    {
 	        return stat_changes;
 	    }
@@ -166,7 +128,7 @@ public class MoveApi
 	    public void setStat_changes (String[] stat_changes)
 	    {
 	        this.stat_changes = stat_changes;
-	    }
+	    }*/
 
 	    public Names[] getNames ()
 	    {
@@ -218,25 +180,6 @@ public class MoveApi
 	        this.power = power;
 	    }
 
-	    public Contest_effect getContest_effect ()
-	    {
-	        return contest_effect;
-	    }
-
-	    public void setContest_effect (Contest_effect contest_effect)
-	    {
-	        this.contest_effect = contest_effect;
-	    }
-
-	    public Super_contest_effect getSuper_contest_effect ()
-	    {
-	        return super_contest_effect;
-	    }
-
-	    public void setSuper_contest_effect (Super_contest_effect super_contest_effect)
-	    {
-	        this.super_contest_effect = super_contest_effect;
-	    }
 
 	    public String getPp ()
 	    {
@@ -268,19 +211,18 @@ public class MoveApi
 	        this.generation = generation;
 	    }
 
-	    public Contest_combos getContest_combos ()
-	    {
-	        return contest_combos;
-	    }
-
-	    public void setContest_combos (Contest_combos contest_combos)
-	    {
-	        this.contest_combos = contest_combos;
-	    }
 
 	    @Override
 	    public String toString()
 	    {
-	        return "ClassPojo [flavor_text_entries = "+flavor_text_entries+", effect_entries = "+effect_entries+", effect_changes = "+effect_changes+", damage_class = "+damage_class+", contest_type = "+contest_type+", type = "+type+", meta = "+meta+", machines = "+machines+", past_values = "+past_values+", id = "+id+", effect_chance = "+effect_chance+", stat_changes = "+stat_changes+", names = "+names+", priority = "+priority+", name = "+name+", target = "+target+", power = "+power+", contest_effect = "+contest_effect+", super_contest_effect = "+super_contest_effect+", pp = "+pp+", accuracy = "+accuracy+", generation = "+generation+", contest_combos = "+contest_combos+"]";
+	    	return "";
 	    }
+
+		public Ailment getAilment() {
+			return ailment;
+		}
+
+		public void setAilment(Ailment ailment) {
+			this.ailment = ailment;
+		}
 }

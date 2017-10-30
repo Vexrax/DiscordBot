@@ -1,5 +1,6 @@
 package pokemon;
 
+import java.awt.Color;
 import java.io.IOException;
 
 import com.google.gson.Gson;
@@ -7,6 +8,8 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.MessageEmbed;
 import pokeAPI.MoveApi;
 import pokeAPI.Moves;
 import pokeAPI.PokeApi;
@@ -27,6 +30,7 @@ public class BattleModel
 		this.trainer1 = trainer1;
 		this.trainer2 = trainer2;
 		setupRandomTeam();
+		setupIntStats();
 		//this.team2 = setupRandomTeam();
 		//startBattle();
 	}
@@ -35,13 +39,24 @@ public class BattleModel
 		for(int i = 0; i < 6; i++)
 		{
 			this.team1[i] = pickPokemon((int)(Math.random()*720));
+			pickMovesTeam1(i);
 		}
-	}
-	private void setupRandomTeam2()
-	{
 		for(int i = 0; i < 6; i++)
 		{
 			this.team2[i] = pickPokemon((int)(Math.random()*720));
+			pickMovesTeam2(i);
+
+		}
+	}
+	private void setupIntStats()
+	{
+		for(int i = 0; i < 6; i++)
+		{
+			for(int j = 0; j < 6; j++)
+			{
+				this.team1[i].setIntStat(j);
+				this.team2[i].setIntStat(j);
+			}
 		}
 	}
 	private PokeApi pickPokemon(int pokemonID) 
@@ -52,7 +67,36 @@ public class BattleModel
 		PokeApi PokeApi = gson.fromJson(json, PokeApi.class);
 		return PokeApi;
 	}
-	
+	public void pickMovesTeam1(int pokemonidinlist)
+	{
+		for(int i = 0; i < 4; i++)
+		{
+			int random = (int)(Math.random()*this.team1[pokemonidinlist].getMoves().length);
+			String movename = this.team1[pokemonidinlist].getMoves()[random].getMove().getName();
+			this.team1[pokemonidinlist].setNameOfMoves(i, this.team1[pokemonidinlist].getMoves()[random].getMove().getName());
+			String json = "";
+			json = getJson("https://pokeapi.co/api/v2/move/" + movename +"/");
+			Gson gson = new Gson();
+			MoveApi moveapi = gson.fromJson(json, MoveApi.class);
+			this.team1[pokemonidinlist].setMoveData(i, moveapi);
+			this.team1[pokemonidinlist].setNameOfMoves(i, movename);
+		}	
+	}
+	public void pickMovesTeam2(int pokemonidinlist)
+	{
+		for(int i = 0; i < 4; i++)
+		{
+			int random = (int)(Math.random()*this.team1[pokemonidinlist].getMoves().length);
+			String movename = this.team1[pokemonidinlist].getMoves()[random].getMove().getName();
+			this.team1[pokemonidinlist].setNameOfMoves(i, this.team1[pokemonidinlist].getMoves()[random].getMove().getName());
+			String json = "";
+			json = getJson("https://pokeapi.co/api/v2/move/" + movename +"/");
+			Gson gson = new Gson();
+			MoveApi moveapi = gson.fromJson(json, MoveApi.class);
+			this.team1[pokemonidinlist].setMoveData(i, moveapi);
+			this.team1[pokemonidinlist].setNameOfMoves(i, movename);
+		}
+	}
 	private void startBattle()
 	{
 		this.currentpokemont1 = 0;
@@ -82,8 +126,35 @@ public class BattleModel
 	}
 	public String toString()
 	{
-		//String repr of the pokemon battle.
-		return this.team1[0].getName() + this.team1[1].getMoves();
+		return "ima do this later";
+	}
+	public MessageEmbed toEmbded()
+	{
+    	EmbedBuilder builder = new EmbedBuilder();
+    	builder.setColor(Color.BLUE);
+    	for(int i = 0; i < 6; i++)
+    	{
+    		builder.addField("**" + this.team1[i].getName()  + "**", movesStringBuilder(i), true);
+    	}
+		return builder.build();
+	}
+	public String statsStringBuilder(int teamidnumber)
+	{
+		StringBuilder builder = new StringBuilder();
+		for(int i = 0; i < 6; i++)
+		{
+			builder.append(this.team1[teamidnumber].getIntStat(i) + "\n");	
+		}
+		return builder.toString();
+	}
+	public String movesStringBuilder(int teamidnumber)
+	{
+		StringBuilder builder = new StringBuilder();
+		for(int i = 0; i < 4; i++)
+		{
+			builder.append(this.team1[teamidnumber].getMoveData(i).getName() + "\n");	
+		}
+		return builder.toString();
 	}
 	public static String getJson(String url) 
 	{

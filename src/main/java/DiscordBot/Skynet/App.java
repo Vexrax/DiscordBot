@@ -1,6 +1,7 @@
 package DiscordBot.Skynet;
 
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -18,6 +19,7 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.MessageEmbed.Field;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
@@ -172,9 +174,7 @@ public class App extends ListenerAdapter
     {
     	if(command.equals("NewBattle") || battle.checkIfBattleWon())
     		battle = new BattleModel("player1", "player2");
-    	EmbedBuilder builder = new EmbedBuilder();
-    	builder.setDescription(battle.toString());
-    	textchannel.sendMessage(builder.build()).queue();
+    	textchannel.sendMessage(battle.toEmbded()).queue();
     	//playSong(guild, textchannel, user, "https://www.youtube.com/watch?v=8Cw3vfuHh_A");
     }
     
@@ -253,6 +253,7 @@ public class App extends ListenerAdapter
     		catch(Exception e)
     		{
     			objChannel.sendMessage(e.getMessage()).queue();
+    			objChannel.sendMessage(e.getCause().getMessage()).queue();
     		}
     	}
     }
