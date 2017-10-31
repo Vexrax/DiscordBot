@@ -20,8 +20,8 @@ public class BattleModel
 	private PokeApi[] team2 = new PokeApi[6];
 	private String trainer1;
 	private String trainer2;
-	private int currentpokemont1;
-	private int currentpokemont2;
+	private int currentpokemont1 = 0;
+	private int currentpokemont2 = 0;
 	private int turn;
 	private static OkHttpClient client = new OkHttpClient();
 	
@@ -155,6 +155,28 @@ public class BattleModel
 			builder.append(this.team1[teamidnumber].getMoveData(i).getName() + "\n");	
 		}
 		return builder.toString();
+	}
+	public MessageEmbed currentPokemonStringBuilder()
+	{
+		EmbedBuilder builder = new EmbedBuilder();
+    	builder.setColor(Color.YELLOW);
+    	builder.setTitle("Current Pokemon");
+    	builder.setThumbnail(this.team1[this.currentpokemont1].getSprites().getFront_default());
+    	builder.appendDescription("**" + team1[this.currentpokemont1].getName() + "**\n");
+    	builder.appendDescription("**Stats:**\n");
+    	builder.appendDescription("Health Points : " + team1[this.currentpokemont1].getIntStat(5) + "\n");
+    	builder.appendDescription("Attack            : " + team1[this.currentpokemont1].getIntStat(4) + "\n");
+    	builder.appendDescription("Defense          : " + team1[this.currentpokemont1].getIntStat(3) + "\n");
+    	builder.appendDescription("Special Atk     : " + team1[this.currentpokemont1].getIntStat(2) + "\n");
+    	builder.appendDescription("Special Def     : " + team1[this.currentpokemont1].getIntStat(1) + "\n");
+    	builder.appendDescription("Speed               : " + team1[this.currentpokemont1].getIntStat(0) + "\n");
+    	builder.appendDescription(" \n");
+    	builder.appendDescription("**Moves**\n");
+    	builder.addField(this.team1[this.currentpokemont1].getMoves()[0].getMove().getName(), "Power: " + this.team1[this.currentpokemont1].getMoveData(0).getPower() + "\n" + "Accruacy: " + this.team1[this.currentpokemont1].getMoveData(0).getAccuracy() + "\n" , true);
+    	builder.addField(this.team1[this.currentpokemont1].getMoves()[1].getMove().getName(), "Power: " + this.team1[this.currentpokemont1].getMoveData(1).getPower() + "\n" + "Accruacy: " + this.team1[this.currentpokemont1].getMoveData(1).getAccuracy() + "\n" , true);
+    	builder.addField(this.team1[this.currentpokemont1].getMoves()[2].getMove().getName(), "Power: " + this.team1[this.currentpokemont1].getMoveData(2).getPower() + "\n" + "Accruacy: " + this.team1[this.currentpokemont1].getMoveData(2).getAccuracy() + "\n" , true);
+    	builder.addField(this.team1[this.currentpokemont1].getMoves()[3].getMove().getName(), "Power: " + this.team1[this.currentpokemont1].getMoveData(3).getPower() + "\n" + "Accruacy: " + this.team1[this.currentpokemont1].getMoveData(3).getAccuracy() + "\n" , true);
+    	return builder.build();
 	}
 	public static String getJson(String url) 
 	{

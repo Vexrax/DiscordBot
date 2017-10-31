@@ -175,6 +175,7 @@ public class App extends ListenerAdapter
     	if(command.equals("NewBattle") || battle.checkIfBattleWon())
     		battle = new BattleModel("player1", "player2");
     	textchannel.sendMessage(battle.toEmbded()).queue();
+    	textchannel.sendMessage(battle.currentPokemonStringBuilder()).queue();
     	//playSong(guild, textchannel, user, "https://www.youtube.com/watch?v=8Cw3vfuHh_A");
     }
     
