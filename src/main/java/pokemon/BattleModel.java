@@ -1,7 +1,17 @@
 package pokemon;
 
 import java.awt.Color;
+import java.awt.List;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.function.IntPredicate;
+
+import javax.swing.plaf.basic.BasicScrollPaneUI.VSBChangeListener;
+
+import org.omg.CORBA.PRIVATE_MEMBER;
+import org.omg.CORBA.SystemException;
 
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
@@ -10,43 +20,57 @@ import com.squareup.okhttp.Response;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.impl.UserImpl;
 import pokeAPI.MoveApi;
 import pokeAPI.Moves;
 import pokeAPI.PokeApi;
 
 public class BattleModel 
 {
+	private ArrayList<PokeApi[]> teams = new ArrayList<PokeApi[]>();
+	private int[] current_pokemon = new int[2]; 
 	private PokeApi[] team1 = new PokeApi[6];
 	private PokeApi[] team2 = new PokeApi[6];
-	private String trainer1;
-	private String trainer2;
-	private int currentpokemont1 = 0;
-	private int currentpokemont2 = 0;
 	private int turn;
+	private boolean battlewon = false;
 	private static OkHttpClient client = new OkHttpClient();
+	private User trainer1;
+	private User trainer2;
 	
-	public BattleModel(String trainer1, String trainer2)
+	public BattleModel(User trainer1, User trainer2)
 	{
+		this.current_pokemon[0] = 0;
+		this.current_pokemon[1] = 0;
 		this.trainer1 = trainer1;
 		this.trainer2 = trainer2;
-		setupRandomTeam();
+		this.teams.add(this.team1);
+		this.teams.add(this.team2);
+		setupRandomTeam(0);
+		System.out.println("finshed team 1 setup");
+		setupRandomTeam(1);
+		System.out.println("finshed team 2 setup");
 		setupIntStats();
-		//this.team2 = setupRandomTeam();
+		System.out.println("finshed stats setup");
+		System.out.println("finshed setup");
+		if(!trainer1.hasPrivateChannel())
+		{
+			trainer1.openPrivateChannel().complete();
+		}
+		if(!trainer2.hasPrivateChannel())
+		{
+			trainer2.openPrivateChannel().complete();
+		}
 		//startBattle();
 	}
-	private void setupRandomTeam()
+	private void setupRandomTeam(int team)
 	{
 		for(int i = 0; i < 6; i++)
 		{
-			this.team1[i] = pickPokemon((int)(Math.random()*720));
-			pickMovesTeam1(i);
+			this.teams.get(team)[i] = pickPokemon((int)(Math.random()*720));
+			pickMovesTeam1(i, team);
 		}
-		for(int i = 0; i < 6; i++)
-		{
-			this.team2[i] = pickPokemon((int)(Math.random()*720));
-			pickMovesTeam2(i);
 
-		}
 	}
 	private void setupIntStats()
 	{
@@ -54,8 +78,8 @@ public class BattleModel
 		{
 			for(int j = 0; j < 6; j++)
 			{
-				this.team1[i].setIntStat(j);
-				this.team2[i].setIntStat(j);
+				this.teams.get(0)[i].setIntStat(j);
+				this.teams.get(1)[i].setIntStat(j);
 			}
 		}
 	}
@@ -67,44 +91,30 @@ public class BattleModel
 		PokeApi PokeApi = gson.fromJson(json, PokeApi.class);
 		return PokeApi;
 	}
-	public void pickMovesTeam1(int pokemonidinlist)
+	public void pickMovesTeam1(int pokemonidinlist, int team)
 	{
 		for(int i = 0; i < 4; i++)
 		{
-			int random = (int)(Math.random()*this.team1[pokemonidinlist].getMoves().length);
-			String movename = this.team1[pokemonidinlist].getMoves()[random].getMove().getName();
-			this.team1[pokemonidinlist].setNameOfMoves(i, this.team1[pokemonidinlist].getMoves()[random].getMove().getName());
+			int random = (int)(Math.random()*this.teams.get(team)[pokemonidinlist].getMoves().length);
+			String movename = this.teams.get(team)[pokemonidinlist].getMoves()[random].getMove().getName();
+			this.teams.get(team)[pokemonidinlist].setNameOfMoves(i, this.teams.get(team)[pokemonidinlist].getMoves()[random].getMove().getName());
 			String json = "";
 			json = getJson("https://pokeapi.co/api/v2/move/" + movename +"/");
 			Gson gson = new Gson();
 			MoveApi moveapi = gson.fromJson(json, MoveApi.class);
-			this.team1[pokemonidinlist].setMoveData(i, moveapi);
-			this.team1[pokemonidinlist].setNameOfMoves(i, movename);
+			this.teams.get(team)[pokemonidinlist].setMoveData(i, moveapi);
+			this.teams.get(team)[pokemonidinlist].setNameOfMoves(i, movename);
 		}	
-	}
-	public void pickMovesTeam2(int pokemonidinlist)
-	{
-		for(int i = 0; i < 4; i++)
-		{
-			int random = (int)(Math.random()*this.team1[pokemonidinlist].getMoves().length);
-			String movename = this.team1[pokemonidinlist].getMoves()[random].getMove().getName();
-			this.team1[pokemonidinlist].setNameOfMoves(i, this.team1[pokemonidinlist].getMoves()[random].getMove().getName());
-			String json = "";
-			json = getJson("https://pokeapi.co/api/v2/move/" + movename +"/");
-			Gson gson = new Gson();
-			MoveApi moveapi = gson.fromJson(json, MoveApi.class);
-			this.team1[pokemonidinlist].setMoveData(i, moveapi);
-			this.team1[pokemonidinlist].setNameOfMoves(i, movename);
-		}
 	}
 	private void startBattle()
 	{
-		this.currentpokemont1 = 0;
-		this.currentpokemont2 = 0;
+		this.current_pokemon[0] = 0;
+		this.current_pokemon[1] = 0;
 	}
-	public void switchPokemon()
+	public void switchPokemon(int switchto, int team)
 	{
-		//todo
+		if(0 <= switchto && switchto < 6)
+			this.current_pokemon[team] = switchto;
 	}
 	public void useMove()
 	{
@@ -112,7 +122,7 @@ public class BattleModel
 	}
 	public boolean checkIfBattleWon()
 	{
-		return true;
+		return this.battlewon;
 		//todo
 	}
 	private int damageCalculation(MoveApi move, PokeApi pokemon)
@@ -124,58 +134,70 @@ public class BattleModel
 	{
 		//todo
 	}
-	public String toString()
+	public void sendUpdatedBattle()
 	{
-		return "ima do this later";
+		((UserImpl)trainer1).getPrivateChannel().sendMessage(toEmbded(0)).queue();
+		((UserImpl)trainer1).getPrivateChannel().sendMessage(currentPokemonStringBuilder(0)).queue();
+		((UserImpl)trainer2).getPrivateChannel().sendMessage(toEmbded(1)).queue();
+		((UserImpl)trainer2).getPrivateChannel().sendMessage(currentPokemonStringBuilder(1)).queue();
 	}
-	public MessageEmbed toEmbded()
+	public MessageEmbed toEmbded(int team)
 	{
     	EmbedBuilder builder = new EmbedBuilder();
     	builder.setColor(Color.BLUE);
     	for(int i = 0; i < 6; i++)
     	{
-    		builder.addField("**" + this.team1[i].getName()  + "**", movesStringBuilder(i), true);
+    		builder.addField("**" + this.teams.get(team)[i].getName()  + "**", movesStringBuilder(i, team), true);
     	}
 		return builder.build();
 	}
-	public String statsStringBuilder(int teamidnumber)
+	public String statsStringBuilder(int teamidnumber, int team)
 	{
 		StringBuilder builder = new StringBuilder();
 		for(int i = 0; i < 6; i++)
 		{
-			builder.append(this.team1[teamidnumber].getIntStat(i) + "\n");	
+			builder.append(this.teams.get(team)[teamidnumber].getIntStat(i) + "\n");	
 		}
 		return builder.toString();
 	}
-	public String movesStringBuilder(int teamidnumber)
+	public String movesStringBuilder(int teamidnumber, int team)
 	{
 		StringBuilder builder = new StringBuilder();
 		for(int i = 0; i < 4; i++)
 		{
-			builder.append(this.team1[teamidnumber].getMoveData(i).getName() + "\n");	
+			builder.append(this.teams.get(team)[teamidnumber].getMoveData(i).getName() + "\n");	
 		}
 		return builder.toString();
 	}
-	public MessageEmbed currentPokemonStringBuilder()
+	public MessageEmbed currentPokemonStringBuilder(int team)
 	{
 		EmbedBuilder builder = new EmbedBuilder();
     	builder.setColor(Color.YELLOW);
     	builder.setTitle("Current Pokemon");
-    	builder.setThumbnail(this.team1[this.currentpokemont1].getSprites().getFront_default());
-    	builder.appendDescription("**" + team1[this.currentpokemont1].getName() + "**\n");
+    	builder.setThumbnail(this.teams.get(team)[this.current_pokemon[team]].getSprites().getFront_default());
+    	builder.appendDescription("**" + teams.get(team)[this.current_pokemon[team]].getName() + "**\n");
     	builder.appendDescription("**Stats:**\n");
-    	builder.appendDescription("Health Points : " + team1[this.currentpokemont1].getIntStat(5) + "\n");
-    	builder.appendDescription("Attack            : " + team1[this.currentpokemont1].getIntStat(4) + "\n");
-    	builder.appendDescription("Defense          : " + team1[this.currentpokemont1].getIntStat(3) + "\n");
-    	builder.appendDescription("Special Atk     : " + team1[this.currentpokemont1].getIntStat(2) + "\n");
-    	builder.appendDescription("Special Def     : " + team1[this.currentpokemont1].getIntStat(1) + "\n");
-    	builder.appendDescription("Speed               : " + team1[this.currentpokemont1].getIntStat(0) + "\n");
+    	builder.appendDescription("Health Points : " + teams.get(team)[this.current_pokemon[team]].getIntStat(5) + "\n");
+    	builder.appendDescription("Attack            : " + teams.get(team)[this.current_pokemon[team]].getIntStat(4) + "\n");
+    	builder.appendDescription("Defense          : " + teams.get(team)[this.current_pokemon[team]].getIntStat(3) + "\n");
+    	builder.appendDescription("Special Atk     : " + teams.get(team)[this.current_pokemon[team]].getIntStat(2) + "\n");
+    	builder.appendDescription("Special Def     : " + teams.get(team)[this.current_pokemon[team]].getIntStat(1) + "\n");
+    	builder.appendDescription("Speed               : " + teams.get(team)[this.current_pokemon[team]].getIntStat(0) + "\n");
     	builder.appendDescription(" \n");
     	builder.appendDescription("**Moves**\n");
-    	builder.addField(this.team1[this.currentpokemont1].getMoves()[0].getMove().getName(), "Power: " + this.team1[this.currentpokemont1].getMoveData(0).getPower() + "\n" + "Accruacy: " + this.team1[this.currentpokemont1].getMoveData(0).getAccuracy() + "\n" , true);
-    	builder.addField(this.team1[this.currentpokemont1].getMoves()[1].getMove().getName(), "Power: " + this.team1[this.currentpokemont1].getMoveData(1).getPower() + "\n" + "Accruacy: " + this.team1[this.currentpokemont1].getMoveData(1).getAccuracy() + "\n" , true);
-    	builder.addField(this.team1[this.currentpokemont1].getMoves()[2].getMove().getName(), "Power: " + this.team1[this.currentpokemont1].getMoveData(2).getPower() + "\n" + "Accruacy: " + this.team1[this.currentpokemont1].getMoveData(2).getAccuracy() + "\n" , true);
-    	builder.addField(this.team1[this.currentpokemont1].getMoves()[3].getMove().getName(), "Power: " + this.team1[this.currentpokemont1].getMoveData(3).getPower() + "\n" + "Accruacy: " + this.team1[this.currentpokemont1].getMoveData(3).getAccuracy() + "\n" , true);
+    	for (int i = 0; i < 4; i++)
+    	{
+    		builder.addField(this.teams.get(team)[this.current_pokemon[team]].getNameOfMoves(i), "Power: " + this.teams.get(team)[this.current_pokemon[team]].getMoveData(i).getPower() + "\n" + "Accruacy: " + this.teams.get(team)[this.current_pokemon[team]].getMoveData(i).getAccuracy() + "\n" , true);
+    	}
+    	return builder.build();
+	}
+	public MessageEmbed publicBattleView()
+	{
+		EmbedBuilder builder = new EmbedBuilder();
+    	builder.setColor(Color.magenta);
+    	builder.setTitle(this.trainer1 + " VS " + this.trainer2);
+    	//builder.setImage(teams.get(0)[this.currentpokemont1].getSprites().getFront_default());
+    	builder.setDescription(teams.get(0)[this.current_pokemon[0]].getSprites().getFront_default() + teams.get(1)[this.current_pokemon[1]].getSprites().getFront_default());
     	return builder.build();
 	}
 	public static String getJson(String url) 

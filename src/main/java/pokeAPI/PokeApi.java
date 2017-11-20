@@ -229,6 +229,10 @@ public class PokeApi
 	    {
 	    	this.name_of_moves[move] = name;
 	    }
+	    public String getNameOfMoves(int move)
+	    {
+	    	return this.name_of_moves[move];
+	    }
 	    public void setMoveData(int index, MoveApi move)
 	    {
 	    	this.MoveData[index] = move;
