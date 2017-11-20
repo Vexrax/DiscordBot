@@ -12,8 +12,6 @@ import java.util.Scanner;
 
 import javax.security.auth.login.LoginException;
 
-import org.omg.CORBA.SystemException;
-
 import Backend.BotListener;
 import Backend.CommandParser;
 import Commands.Command;
@@ -23,27 +21,11 @@ import Commands.PlaySongCommand;
 import Commands.PokemonBattleCommand;
 import Commands.QuoteCommand;
 import Commands.RollDiceCommand;
-import music.MusicManager;
-import music.MusicPlayer;
 import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.MessageEmbed.Field;
-import net.dv8tion.jda.core.entities.PrivateChannel;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.entities.VoiceChannel;
-import net.dv8tion.jda.core.entities.impl.MessageEmbedImpl;
-import net.dv8tion.jda.core.events.message.MessageEmbedEvent;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import pokemon.BattleModel;
+
 
 public class App 
 {
