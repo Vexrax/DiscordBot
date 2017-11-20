@@ -15,14 +15,13 @@ public class PlaySongCommand implements Command
 	final MusicManager manager = new MusicManager();
 	public boolean called(String[] args, MessageReceivedEvent event) 
 	{
-		System.out.println("here");
-
-		return true;
+		if(args[0].equals("play") || args[0].equals("skip") || args[0].equals("clear"))
+			return true;
+		return false;
 	}
 
 	public void action(String[] args, MessageReceivedEvent e) 
 	{		
-		System.out.println(args[1]);
 		if(args[0].equals("play"))
 		{			
 			play(args[1], e);
@@ -74,9 +73,9 @@ public class PlaySongCommand implements Command
     	manager.getPlayer(e.getGuild()).skipTrack();
     	objTextChannel.sendMessage("Skipping current song").queue();
 	}
+	
 	public void clearPlaylist(MessageReceivedEvent e)
 	{
-        MessageChannel objChannel = e.getChannel();  
         TextChannel objTextChannel = e.getTextChannel();
     	MusicPlayer player = manager.getPlayer(objTextChannel.getGuild());
     	if(player.getListener().getTracks().isEmpty())
@@ -85,6 +84,7 @@ public class PlaySongCommand implements Command
     		return;
     	}
     	player.getListener().getTracks().clear();
+    	manager.getPlayer(e.getGuild()).skipTrack();
     	objTextChannel.sendMessage("Playlist cleared.").queue();
     	
 	}

@@ -15,7 +15,7 @@ public class BotListener extends ListenerAdapter
     public void onMessageReceived(MessageReceivedEvent e)
 	{
 		if(e.getMessage().getContent().startsWith("//") && e.getMessage().getAuthor().getId() != e.getJDA().getSelfUser().getId())
-			App.handleCommand(App.parser.parse(e.getMessage().getContent().toLowerCase(), e));
+			App.handleCommand(App.parser.parse(e.getMessage().getContent(), e));
 	}
 	@Override
 	public void onReady(ReadyEvent e)
