@@ -1,12 +1,5 @@
 package DiscordBot.Skynet;
 
-
-import java.awt.Color;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.channels.Channel;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -38,13 +31,7 @@ public class App
     {
         JDA bot = new JDABuilder(AccountType.BOT).setToken(inputToken()).buildBlocking(); //SET TOKEN
         bot.addEventListener(new BotListener());
-        commands.put("ping", new PingCommand());
-        commands.put("quote", new QuoteCommand());
-        commands.put("song", new PlaySongCommand());
-        commands.put("rolldice", new RollDiceCommand());
-        commands.put("flipcoin", new FlipCoinCommand());
-        commands.put("pokemonbattle", new PokemonBattleCommand());
-
+        addCommands();
     }
     
     public static void handleCommand(CommandParser.CommandContainer cmd)
@@ -69,6 +56,15 @@ public class App
     	Scanner scanner = new Scanner(System.in);
     	return scanner.nextLine();
     }    
+    private static void addCommands()
+    {
+        commands.put("ping", new PingCommand());
+        commands.put("quote", new QuoteCommand());
+        commands.put("song", new PlaySongCommand());
+        commands.put("rolldice", new RollDiceCommand());
+        commands.put("flipcoin", new FlipCoinCommand());
+        commands.put("pokemonbattle", new PokemonBattleCommand());
+    }
 }
 
 

@@ -40,7 +40,18 @@ public class PokeApi
 	    private String[] name_of_moves = new String[4];
 	    
 	    private MoveApi[] MoveData = new MoveApi[4];
-
+	    
+	    private int battleHP;
+	    
+	    public int getBattleHP()
+	    {
+	    	return this.battleHP;
+	    }
+	    public void setBattleHP(int HP)
+	    {
+	    	this.battleHP = HP;
+	    }
+	    
 	    public String getLocation_area_encounters ()
 	    {
 	        return location_area_encounters;

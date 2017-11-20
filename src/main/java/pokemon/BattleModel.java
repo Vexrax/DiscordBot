@@ -20,6 +20,7 @@ import com.squareup.okhttp.Response;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.impl.UserImpl;
 import pokeAPI.MoveApi;
@@ -37,8 +38,9 @@ public class BattleModel
 	private static OkHttpClient client = new OkHttpClient();
 	private User trainer1;
 	private User trainer2;
+	private TextChannel mainchannel;
 	
-	public BattleModel(User trainer1, User trainer2)
+	public BattleModel(User trainer1, User trainer2, TextChannel objTextChannel)
 	{
 		this.current_pokemon[0] = 0;
 		this.current_pokemon[1] = 0;
@@ -61,7 +63,17 @@ public class BattleModel
 		{
 			trainer2.openPrivateChannel().complete();
 		}
+		setBattleHP();
+		this.mainchannel = objTextChannel;
 		//startBattle();
+	}
+	private void setBattleHP()
+	{
+		for(int i = 0; i < 6; i++)
+		{
+			team1[i].setBattleHP(team1[i].getIntStat(5));
+			team2[i].setBattleHP(team2[i].getIntStat(5));
+		}
 	}
 	private void setupRandomTeam(int team)
 	{
@@ -111,14 +123,35 @@ public class BattleModel
 		this.current_pokemon[0] = 0;
 		this.current_pokemon[1] = 0;
 	}
-	public void switchPokemon(int switchto, int team)
+	public void switchPokemon(int switchto, User user)
 	{
-		if(0 <= switchto && switchto < 6)
-			this.current_pokemon[team] = switchto;
+		if(user.getId().equals(trainer1.getId()))
+		{
+			if(0 <= switchto && switchto < 6)
+				this.current_pokemon[0] = switchto;
+		}
+		else if(user.getId().equals(trainer2.getId()))
+		{
+			if(0 <= switchto && switchto < 6)
+				this.current_pokemon[1] = switchto;
+		}
 	}
-	public void useMove()
+	public void useMove(int movenumber, User user)
 	{
-		//todo
+		if(user.getId().equals(trainer1.getId()))
+		{
+			 int power = Integer.parseInt(this.teams.get(0)[this.current_pokemon[0]].getMoveData(movenumber).getPower());
+			 teams.get(1)[this.current_pokemon[1]].setBattleHP(teams.get(1)[this.current_pokemon[1]].getBattleHP() - power);
+		}
+		else if(user.getId().equals(trainer2.getId()))
+		{
+			 int power = Integer.parseInt(this.teams.get(1)[this.current_pokemon[1]].getMoveData(movenumber).getPower());
+			 teams.get(0)[this.current_pokemon[0]].setBattleHP(teams.get(0)[this.current_pokemon[0]].getBattleHP() - power);
+		}
+	}
+	public int damagecalculation(int power, int userid)
+	{
+		return power; //fix to actual damage calcultion
 	}
 	public boolean checkIfBattleWon()
 	{
@@ -140,6 +173,10 @@ public class BattleModel
 		((UserImpl)trainer1).getPrivateChannel().sendMessage(currentPokemonStringBuilder(0)).queue();
 		((UserImpl)trainer2).getPrivateChannel().sendMessage(toEmbded(1)).queue();
 		((UserImpl)trainer2).getPrivateChannel().sendMessage(currentPokemonStringBuilder(1)).queue();
+		this.mainchannel.sendMessage(publicBattleView(0)).queue();
+		this.mainchannel.sendMessage("     VS     ").queue();
+		this.mainchannel.sendMessage(publicBattleView(1)).queue();
+
 	}
 	public MessageEmbed toEmbded(int team)
 	{
@@ -191,14 +228,39 @@ public class BattleModel
     	}
     	return builder.build();
 	}
-	public MessageEmbed publicBattleView()
+	public MessageEmbed publicBattleView(int team)
 	{
 		EmbedBuilder builder = new EmbedBuilder();
-    	builder.setColor(Color.magenta);
-    	builder.setTitle(this.trainer1 + " VS " + this.trainer2);
-    	//builder.setImage(teams.get(0)[this.currentpokemont1].getSprites().getFront_default());
-    	builder.setDescription(teams.get(0)[this.current_pokemon[0]].getSprites().getFront_default() + teams.get(1)[this.current_pokemon[1]].getSprites().getFront_default());
+    	builder.setColor(Color.RED);
+    	if (team == 0)
+    		builder.setTitle(this.trainer1.getName());
+    	if(team == 1)
+    		builder.setTitle(this.trainer2.getName());
+    	builder.appendDescription("**" + teams.get(team)[this.current_pokemon[team]].getName() + "**\n");
+    	builder.appendDescription("Health Points "+  teams.get(team)[this.current_pokemon[team]].getBattleHP() + "/" +  teams.get(team)[this.current_pokemon[team]].getIntStat(5) + "\n");
+    	builder.appendDescription(healthBarGenerator(teams.get(team)[this.current_pokemon[team]].getBattleHP(), teams.get(team)[this.current_pokemon[team]].getIntStat(5)));
+    	builder.setThumbnail(this.teams.get(team)[this.current_pokemon[team]].getSprites().getFront_default());
     	return builder.build();
+	}
+	
+	public String healthBarGenerator(int hp, int totalhp)
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("[");
+		Double percentage = (double) (hp/totalhp)*(100);
+		Double missinghp = 0.0;
+		if(hp >= 0)
+			missinghp = 100 - percentage;
+		for(int i = 0; i < percentage; i++)
+		{
+				builder.append("|");
+		}
+		for(int i = 0; i < missinghp; i++ )
+		{
+			builder.append(" ");
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 	public static String getJson(String url) 
 	{

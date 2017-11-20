@@ -23,6 +23,10 @@ public class PokemonBattleCommand implements Command
 		{
 			return true;
 		}
+		else if(args[0].equals("move")) //check if mvoe number is valid (0-4)
+		{
+			return true;
+		}
 		//Add more if statements for battle commands
 		return false;
 	}
@@ -33,14 +37,18 @@ public class PokemonBattleCommand implements Command
         MessageChannel objChannel = e.getChannel();
         User objUser = e.getAuthor();   
         TextChannel objTextChannel = e.getTextChannel();
-    	battle = new BattleModel(objUser, objUser); //figure out a way to parse to string 
     	if(args[0].equals("newbattle"))
     	{
     		NewBattle(e);
     	}
     	else if (args[0].equals("switch"))
     	{
+    		System.out.println(args[1]);
     		Switch(args[1], e);
+    	}
+    	else if(args[0].equals("move"))
+    	{
+    		useMove(Integer.parseInt(args[1]), e);
     	}
     	battle.sendUpdatedBattle();		
 	}
@@ -60,18 +68,29 @@ public class PokemonBattleCommand implements Command
         Message objMsg = e.getMessage(); //use later to set up trainer 2
         User objUser = e.getAuthor();  
         objTextChannel.sendMessage("Setting up a new battle").queue();
-		battle = new BattleModel(objUser, objUser);
+		battle = new BattleModel(objUser, e.getMessage().getMentionedUsers().get(0), objTextChannel);
 	}
 	public void Switch(String switchnumber, MessageReceivedEvent e)
 	{
         TextChannel objTextChannel = e.getTextChannel();
 		try
 		{
-			battle.switchPokemon(Integer.parseInt(switchnumber), 0); //using 0 for now CHAGE TO PROPPER LOGIC LATER
+			battle.switchPokemon(Integer.parseInt(switchnumber), e.getAuthor()); //using 0 for now CHAGE TO PROPPER LOGIC LATER
 		}
 		catch(Exception exception)
 		{
 			objTextChannel.sendMessage("please select a number from 0-5").queue();
+		}
+	}
+	public void useMove(int movenumber,MessageReceivedEvent e)
+	{
+		try 
+		{
+			battle.useMove(movenumber, e.getAuthor());
+		}
+		catch(Exception exception)
+		{
+			System.out.println("exception at line 93 pokemonbattlecommand");
 		}
 	}
 }
