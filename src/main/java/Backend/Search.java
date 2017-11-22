@@ -21,11 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * Print a list of videos matching a search term.
- *
- * @author Jeremy Walker
- */
 public class Search {
 
 
@@ -45,8 +40,7 @@ public class Search {
      */
     public  String searchToUrl(String searchterm, String apikey) 
     {
-        // Read the developer key from the properties file.
-
+     
         try {
             // This object is used to make YouTube Data API requests. The last
             // argument is required, but since we don't need anything
@@ -57,7 +51,6 @@ public class Search {
                 }
             }).setApplicationName("youtube-cmdline-search-sample").build();
 
-            // Prompt the user to enter a query term.
             String queryTerm = searchterm;
 
             YouTube.Search.List search = youtube.search().list("id,snippet");
