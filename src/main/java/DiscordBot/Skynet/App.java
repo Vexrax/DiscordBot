@@ -1,9 +1,12 @@
 package DiscordBot.Skynet;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.Scanner;
 
 import javax.security.auth.login.LoginException;
+
 
 import Backend.BotListener;
 import Backend.CommandParser;
@@ -22,14 +25,17 @@ import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 public class App 
 {
-	private static final char[][] CommandArray = null;
+	private static final String API_KEY_PATH = "APIKEYS.txt";
+
 	public static final CommandParser parser = new CommandParser();
 	
 	public static HashMap<String, Command> commands = new HashMap<String, Command>();
+	public static HashMap<String, String> APIkeys = new HashMap<String, String>();
 	
     public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException
     {
-        JDA bot = new JDABuilder(AccountType.BOT).setToken(inputToken()).buildBlocking(); //SET TOKEN
+    	getApiKeys();
+        JDA bot = new JDABuilder(AccountType.BOT).setToken(APIkeys.get("DISCORD:")).buildBlocking(); //SET TOKEN
         bot.addEventListener(new BotListener());
         addCommands();
     }
@@ -50,17 +56,40 @@ public class App
     		}
     	}
     }
-    private static String inputToken()
+    private static void getApiKeys()
     {
-    	System.out.println("Enter your bot token: ");
-    	Scanner scanner = new Scanner(System.in);
-    	return scanner.nextLine();
-    }    
+		String path = API_KEY_PATH;
+    	try
+    	{
+    		BufferedReader textreader = new BufferedReader(new FileReader(path));
+    		int numberoflines = 0;
+    		while(textreader.readLine() != null)
+    		{
+    			numberoflines ++;
+    		}
+    		textreader.close();
+    		String[] quotearray = new String[numberoflines]; 
+    		BufferedReader textreaderforquotes = new BufferedReader(new FileReader(path));
+    		for(int i = 0; i < numberoflines; i++)
+    		{
+    			quotearray[i] = textreaderforquotes.readLine();
+        		String[] split = quotearray[i].split(" ");
+    			APIkeys.put(split[0], split[1]);
+    		}
+    		textreaderforquotes.close();
+    	}  	
+    	
+    	catch(IOException exception) 
+    	{
+    		System.out.println("File Could Not Be Found");
+    	}
+    	
+    }
     private static void addCommands()
     {
         commands.put("ping", new PingCommand());
         commands.put("quote", new QuoteCommand());
-        commands.put("song", new PlaySongCommand());
+        commands.put("song", new PlaySongCommand(APIkeys.get("GOOGLE:")));
         commands.put("rolldice", new RollDiceCommand());
         commands.put("flipcoin", new FlipCoinCommand());
         commands.put("pokemonbattle", new PokemonBattleCommand());

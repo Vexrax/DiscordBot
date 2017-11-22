@@ -141,12 +141,12 @@ public class BattleModel
 		if(user.getId().equals(trainer1.getId()))
 		{
 			 int power = Integer.parseInt(this.teams.get(0)[this.current_pokemon[0]].getMoveData(movenumber).getPower());
-			 teams.get(1)[this.current_pokemon[1]].setBattleHP(teams.get(1)[this.current_pokemon[1]].getBattleHP() - power);
+			 teams.get(1)[this.current_pokemon[1]].setBattleHP(teams.get(1)[this.current_pokemon[1]].getBattleHP() - damagecalculation(power, 1));
 		}
 		else if(user.getId().equals(trainer2.getId()))
 		{
 			 int power = Integer.parseInt(this.teams.get(1)[this.current_pokemon[1]].getMoveData(movenumber).getPower());
-			 teams.get(0)[this.current_pokemon[0]].setBattleHP(teams.get(0)[this.current_pokemon[0]].getBattleHP() - power);
+			 teams.get(0)[this.current_pokemon[0]].setBattleHP(teams.get(0)[this.current_pokemon[0]].getBattleHP() - damagecalculation(power, 1));
 		}
 	}
 	public int damagecalculation(int power, int userid)

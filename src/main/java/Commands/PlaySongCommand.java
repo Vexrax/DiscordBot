@@ -1,6 +1,7 @@
 package Commands;
 
 
+import Backend.Search;
 import music.MusicManager;
 import music.MusicPlayer;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -12,6 +13,11 @@ import net.dv8tion.jda.core.entities.Guild;
 
 public class PlaySongCommand implements Command
 {
+	private final String API_KEY;
+	public PlaySongCommand(String YoutubeApiKey)
+	{
+		this.API_KEY = YoutubeApiKey;
+	}
 	final MusicManager manager = new MusicManager();
 	public boolean called(String[] args, MessageReceivedEvent event) 
 	{
@@ -24,7 +30,12 @@ public class PlaySongCommand implements Command
 	{		
 		if(args[0].equals("play"))
 		{			
-			play(args[1], e);
+			StringBuilder builder = new StringBuilder();
+			for(int i = 1; i < args.length; i++)
+			{
+				builder.append(args[i] + " ");
+			}
+			play(builder.toString(), e);
 		}
 		else if(args[0].equals("skip"))
 		{
@@ -50,6 +61,8 @@ public class PlaySongCommand implements Command
         User objUser = e.getAuthor();   
         TextChannel objTextChannel = e.getTextChannel();
         Guild objGuild = e.getGuild();
+        Search url = new Search();
+        String urlToPlay = "https://www.youtube.com/watch?v=" + url.searchToUrl(song, this.API_KEY);
 		if(!objGuild.getAudioManager().isConnected() && !objGuild.getAudioManager().isAttemptingToConnect())
 		{
 			VoiceChannel voicechannel = objGuild.getMember(objUser).getVoiceState().getChannel();
@@ -59,7 +72,7 @@ public class PlaySongCommand implements Command
 			}
 			objGuild.getAudioManager().openAudioConnection(voicechannel);
 		}
-		manager.loadTrack(objTextChannel, song);
+		manager.loadTrack(objTextChannel, urlToPlay);
 	}
 	public void skipSong(MessageReceivedEvent e)
 	{
