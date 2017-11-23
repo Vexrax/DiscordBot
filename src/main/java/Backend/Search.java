@@ -8,6 +8,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.PlaylistListResponse;
 import com.google.api.services.youtube.model.ResourceId;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
@@ -17,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -38,7 +40,7 @@ public class Search {
      *
      * @param args command line args.
      */
-    public  String searchToUrl(String searchterm, String apikey) 
+    public String searchToUrl(String searchterm, String apikey) 
     {
      
         try {
@@ -61,6 +63,8 @@ public class Search {
             // Restrict the search results to only include videos. See:
             // https://developers.google.com/youtube/v3/docs/search/list#type
             search.setType("video");
+            search.setVideoCategoryId("10"); //10 is the id of music
+            search.setSafeSearch("moderate");
             search.setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url)");
             search.setMaxResults(NUMBER_OF_VIDEOS_RETURNED);
             SearchListResponse searchResponse = search.execute();

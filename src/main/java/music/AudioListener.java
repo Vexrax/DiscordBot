@@ -27,11 +27,12 @@ public class AudioListener extends AudioEventAdapter
 	}
 	public void nextTrack()
 	{
-		if(tracks.isEmpty())
+		if(this.tracks.isEmpty())
 		{
 			if(player.getGuild().getAudioManager().getConnectedChannel() != null)
 			{
-				player.getGuild().getAudioManager().closeAudioConnection();
+				
+				this.player.getGuild().getAudioManager().closeAudioConnection(); 
 			}
 			return;
 		}
@@ -42,6 +43,7 @@ public class AudioListener extends AudioEventAdapter
 	{
 		if(endReason.mayStartNext)
 			nextTrack();
+
 	}
 	public void queue(AudioTrack track)
 	{

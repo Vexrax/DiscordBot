@@ -10,6 +10,7 @@ import java.util.function.IntPredicate;
 
 import javax.swing.plaf.basic.BasicScrollPaneUI.VSBChangeListener;
 
+import org.apache.commons.io.output.ThresholdingOutputStream;
 import org.omg.CORBA.PRIVATE_MEMBER;
 import org.omg.CORBA.SystemException;
 
@@ -39,6 +40,9 @@ public class BattleModel
 	private User trainer1;
 	private User trainer2;
 	private TextChannel mainchannel;
+	private boolean trainer1selectedmove = false;
+	private boolean trainer2selectedmove = false;
+	private int[] selectedMove = new int[2];
 	
 	public BattleModel(User trainer1, User trainer2, TextChannel objTextChannel)
 	{
@@ -65,7 +69,7 @@ public class BattleModel
 		}
 		setBattleHP();
 		this.mainchannel = objTextChannel;
-		//startBattle();
+		sendUpdatedBattle();
 	}
 	private void setBattleHP()
 	{
@@ -118,11 +122,6 @@ public class BattleModel
 			this.teams.get(team)[pokemonidinlist].setNameOfMoves(i, movename);
 		}	
 	}
-	private void startBattle()
-	{
-		this.current_pokemon[0] = 0;
-		this.current_pokemon[1] = 0;
-	}
 	public void switchPokemon(int switchto, User user)
 	{
 		if(user.getId().equals(trainer1.getId()))
@@ -136,32 +135,120 @@ public class BattleModel
 				this.current_pokemon[1] = switchto;
 		}
 	}
+	public void selectAction(String actionType, int movenumber, User user)
+	{
+		if(!trainer1selectedmove && (user.getId().equals(trainer1.getId())) && actionType.equals("switch") )
+		{
+			this.selectedMove[0] = movenumber + 4;
+			this.trainer1selectedmove = true;
+		}
+		if(!trainer2selectedmove && (user.getId().equals(trainer2.getId())) && actionType.equals("switch") )
+		{
+			this.selectedMove[1] = movenumber + 4;
+			this.trainer2selectedmove = true;
+		}
+		if(!trainer1selectedmove && (user.getId().equals(trainer1.getId())) && actionType.equals("move"))
+		{
+			this.selectedMove[0] = movenumber;
+			this.trainer1selectedmove = true;
+		}
+		if(!trainer2selectedmove && (user.getId().equals(trainer2.getId()))&& actionType.equals("move"))
+		{
+			this.selectedMove[1] = movenumber;
+			this.trainer2selectedmove = true;
+		}
+		
+		if(trainer1selectedmove && trainer2selectedmove)
+		{
+			battle();
+		}
+	}
+	public void battle()
+	{
+		if(this.selectedMove[0] >= 4)
+		{
+			switchPokemon(this.selectedMove[0] - 4, trainer1); 
+			this.trainer1selectedmove = false;
+		}
+		if(this.selectedMove[1] >= 4)
+		{
+			switchPokemon(this.selectedMove[1] - 4, trainer2); 
+			this.trainer2selectedmove = false;
+			return;
+		}
+		if(teams.get(0)[this.current_pokemon[0]].getIntStat(0) > teams.get(1)[this.current_pokemon[1]].getIntStat(0) && this.teams.get(0)[this.current_pokemon[0]].getMoveData(this.selectedMove[0]).getPower() != null)
+		{
+			if (trainer1selectedmove)
+			{
+				useMove(this.selectedMove[0], trainer1);
+				this.trainer1selectedmove = false;
+			}
+			if(trainer2selectedmove)
+			{
+				useMove(this.selectedMove[1], trainer2);
+				this.trainer2selectedmove = false;
+			}
+		}
+		if(teams.get(0)[this.current_pokemon[0]].getIntStat(0) < teams.get(1)[this.current_pokemon[1]].getIntStat(0) && this.teams.get(1)[this.current_pokemon[1]].getMoveData(this.selectedMove[1]).getPower() != null)
+		{
+			if(trainer2selectedmove)
+			{
+				useMove(this.selectedMove[1], trainer2);
+				this.trainer2selectedmove = false;
+			}
+			if (trainer1selectedmove)
+			{
+				useMove(this.selectedMove[0], trainer1);
+				this.trainer1selectedmove = false;
+			}
+		}
+		else
+		{
+			if (trainer1selectedmove)
+			{
+				useMove(this.selectedMove[0], trainer1);
+				this.trainer1selectedmove = false;
+			}
+			if(trainer2selectedmove)
+			{
+				useMove(this.selectedMove[1], trainer2);
+				this.trainer2selectedmove = false;
+			}
+		}
+		sendUpdatedBattle();
+	}
+	
+	
+	
+	
 	public void useMove(int movenumber, User user)
 	{
 		if(user.getId().equals(trainer1.getId()))
 		{
 			 int power = Integer.parseInt(this.teams.get(0)[this.current_pokemon[0]].getMoveData(movenumber).getPower());
-			 teams.get(1)[this.current_pokemon[1]].setBattleHP(teams.get(1)[this.current_pokemon[1]].getBattleHP() - damagecalculation(power, 1));
+			 teams.get(1)[this.current_pokemon[1]].setBattleHP(teams.get(1)[this.current_pokemon[1]].getBattleHP() - damagecalculation(power, movenumber, 0));
 		}
 		else if(user.getId().equals(trainer2.getId()))
 		{
 			 int power = Integer.parseInt(this.teams.get(1)[this.current_pokemon[1]].getMoveData(movenumber).getPower());
-			 teams.get(0)[this.current_pokemon[0]].setBattleHP(teams.get(0)[this.current_pokemon[0]].getBattleHP() - damagecalculation(power, 1));
+			 teams.get(0)[this.current_pokemon[0]].setBattleHP(teams.get(0)[this.current_pokemon[0]].getBattleHP() - damagecalculation(power, movenumber, 1));
 		}
 	}
-	public int damagecalculation(int power, int userid)
+	public int damagecalculation(int power, int movenumber, int userid)
 	{
-		return power; //fix to actual damage calcultion
+		if (userid == 1)
+		{
+			if(this.teams.get(0)[this.current_pokemon[0]].getMoveData(movenumber).getType().getName() == "Special" )
+			{
+				
+			}
+		}
+		return power;
 	}
 	public boolean checkIfBattleWon()
 	{
 		return this.battlewon;
 		//todo
-	}
-	private int damageCalculation(MoveApi move, PokeApi pokemon)
-	{
-		return 0;
-		//the algorithm that calculates the damage done to a pokemon after a move. 
 	}
 	private void StatusEffectActivates(PokeApi pokemon)
 	{
@@ -214,7 +301,7 @@ public class BattleModel
     	builder.setThumbnail(this.teams.get(team)[this.current_pokemon[team]].getSprites().getFront_default());
     	builder.appendDescription("**" + teams.get(team)[this.current_pokemon[team]].getName() + "**\n");
     	builder.appendDescription("**Stats:**\n");
-    	builder.appendDescription("Health Points : " + teams.get(team)[this.current_pokemon[team]].getIntStat(5) + "\n");
+    	builder.appendDescription("Health Points : " + teams.get(team)[this.current_pokemon[team]].getBattleHP() + teams.get(team)[this.current_pokemon[team]].getIntStat(5) + "\n");
     	builder.appendDescription("Attack            : " + teams.get(team)[this.current_pokemon[team]].getIntStat(4) + "\n");
     	builder.appendDescription("Defense          : " + teams.get(team)[this.current_pokemon[team]].getIntStat(3) + "\n");
     	builder.appendDescription("Special Atk     : " + teams.get(team)[this.current_pokemon[team]].getIntStat(2) + "\n");

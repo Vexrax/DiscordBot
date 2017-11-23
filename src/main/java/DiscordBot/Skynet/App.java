@@ -10,7 +10,9 @@ import javax.security.auth.login.LoginException;
 
 import Backend.BotListener;
 import Backend.CommandParser;
+import Commands.ChatBotTensorFlowCommand;
 import Commands.Command;
+import Commands.EndBotCommand;
 import Commands.FlipCoinCommand;
 import Commands.PingCommand;
 import Commands.PlaySongCommand;
@@ -93,6 +95,8 @@ public class App
         commands.put("rolldice", new RollDiceCommand());
         commands.put("flipcoin", new FlipCoinCommand());
         commands.put("pokemonbattle", new PokemonBattleCommand());
+        commands.put("chat", new ChatBotTensorFlowCommand());
+        commands.put("end", new EndBotCommand());
     }
 }
 
