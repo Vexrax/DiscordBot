@@ -34,7 +34,8 @@ public class SummonerCommand implements Command
 
 	public void action(String[] args, MessageReceivedEvent e) 
 	{
-		try {
+		try 
+		{
 			String json = "";
 			EmbedBuilder builder = new EmbedBuilder();
 			
@@ -54,11 +55,12 @@ public class SummonerCommand implements Command
 			builder.appendDescription("Level: " + SummonerData.getSummonerLevel() + "\n");
 			for(int i = 0; i < rankData.length; i++)
 			{
-				builder.appendDescription(rankData[i].getQueueType() + ": **" +rankData[i].getTier() + " " + rankData[i].getRank() + "**\n");
+				builder.appendDescription(rankData[i].getQueueType() + ": **" +rankData[i].getTier() + " " + rankData[i].getRank() + " **\n");
+				builder.appendDescription("W: " + rankData[i].getWins() + " L: " + rankData[i].getLosses() + "\n");
 			}
 			e.getMessage().getTextChannel().sendMessage(builder.build()).queue();
 		}
-		catch(IllegalStateException exception)
+		catch(Exception exception)
 		{
 			e.getMessage().getTextChannel().sendMessage("Summoner could not be found.").queue();
 		}
