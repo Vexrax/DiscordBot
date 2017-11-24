@@ -2,8 +2,6 @@ package Backend;
 
 import java.util.ArrayList;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class CommandParser 

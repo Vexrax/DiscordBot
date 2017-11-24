@@ -10,7 +10,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
 public class AudioListener extends AudioEventAdapter
 {
-	private final BlockingQueue<AudioTrack> tracks = new LinkedBlockingQueue();
+	private final BlockingQueue<AudioTrack> tracks = new LinkedBlockingQueue<AudioTrack>();
 	private final MusicPlayer player;
 	
 	public AudioListener(MusicPlayer player)
@@ -25,25 +25,24 @@ public class AudioListener extends AudioEventAdapter
 	{
 		return this.tracks.size();
 	}
+
 	public void nextTrack()
 	{
 		if(this.tracks.isEmpty())
 		{
-			if(player.getGuild().getAudioManager().getConnectedChannel() != null)
+			if(!player.getGuild().getAudioManager().getConnectedChannel().equals(null))
 			{
-				
-				this.player.getGuild().getAudioManager().closeAudioConnection(); 
+					this.player.getGuild().getAudioManager().closeAudioConnection(); 
 			}
 			return;
 		}
 		player.getAudioPlayer().startTrack(tracks.poll(), false);
 	}
 	@Override
-	public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason )
+	public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason)
 	{
-		if(endReason.mayStartNext)
-			nextTrack();
-
+			if(endReason.mayStartNext)
+				nextTrack();
 	}
 	public void queue(AudioTrack track)
 	{

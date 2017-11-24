@@ -14,13 +14,20 @@ import net.dv8tion.jda.core.entities.Guild;
 public class PlaySongCommand implements Command
 {
 	private final String API_KEY;
+    private User objUser;  
+    private TextChannel objTextChannel;
+    private Guild objGuild;
+	private MusicManager manager = new MusicManager();
+
 	public PlaySongCommand(String YoutubeApiKey)
 	{
 		this.API_KEY = YoutubeApiKey;
 	}
-	final MusicManager manager = new MusicManager();
-	public boolean called(String[] args, MessageReceivedEvent event) 
+	public boolean called(String[] args, MessageReceivedEvent e) 
 	{
+        objUser = e.getAuthor();   
+        objTextChannel = e.getTextChannel();
+        objGuild = e.getGuild();
 		if(args[0].equals("play") || args[0].equals("skip") || args[0].equals("clear"))
 			return true;
 		return false;
@@ -30,12 +37,21 @@ public class PlaySongCommand implements Command
 	{		
 		if(args[0].equals("play"))
 		{			
-			StringBuilder builder = new StringBuilder();
-			for(int i = 1; i < args.length; i++)
+			if(!args[0].startsWith("https://www.youtube.com/watch?v="))
 			{
-				builder.append(args[i] + " ");
+				StringBuilder builder = new StringBuilder();
+				for(int i = 1; i < args.length; i++)
+				{
+					builder.append(args[i] + " ");
+				}
+				Search url = new Search();
+	        	String urlToPlay = "https://www.youtube.com/watch?v=" + url.searchToUrl(builder.toString(), this.API_KEY);
+				play(urlToPlay, e);
 			}
-			play(builder.toString(), e);
+			else
+			{
+				play(args[0], e);
+			}
 		}
 		else if(args[0].equals("skip"))
 		{
@@ -58,12 +74,12 @@ public class PlaySongCommand implements Command
 	}
 	public void play(String song, MessageReceivedEvent e)
 	{
-        User objUser = e.getAuthor();   
-        TextChannel objTextChannel = e.getTextChannel();
-        Guild objGuild = e.getGuild();
-        Search url = new Search();
-        String urlToPlay = "https://www.youtube.com/watch?v=" + url.searchToUrl(song, this.API_KEY);
-		if(!objGuild.getAudioManager().isConnected() && !objGuild.getAudioManager().isAttemptingToConnect())
+		
+		System.out.println(song);
+		if(objGuild == null)
+			return;
+		
+        if(!objGuild.getAudioManager().isConnected() && !objGuild.getAudioManager().isAttemptingToConnect())
 		{
 			VoiceChannel voicechannel = objGuild.getMember(objUser).getVoiceState().getChannel();
 			if(voicechannel == null)
@@ -72,24 +88,25 @@ public class PlaySongCommand implements Command
 			}
 			objGuild.getAudioManager().openAudioConnection(voicechannel);
 		}
-		manager.loadTrack(objTextChannel, urlToPlay);
+		manager.loadTrack(objTextChannel, song);
 	}
 	public void skipSong(MessageReceivedEvent e)
 	{
-        MessageChannel objChannel = e.getChannel();  
-        TextChannel objTextChannel = e.getTextChannel();
-    	if(!e.getGuild().getAudioManager().isConnected() && !e.getGuild().getAudioManager().isAttemptingToConnect())
+    	if(!objGuild.getAudioManager().isConnected() && !objGuild.getAudioManager().isAttemptingToConnect())
     	{
     		objTextChannel.sendMessage("Player is not currently playing song.").queue();
     		return;
     	}
-    	manager.getPlayer(e.getGuild()).skipTrack();
+    	manager.getPlayer(objGuild).skipTrack();
+    	if(manager.getPlayer(objGuild).getListener().getTrackSize() == 0)
+    	{
+    		this.manager = new MusicManager();
+    	}
     	objTextChannel.sendMessage("Skipping current song").queue();
 	}
 	
 	public void clearPlaylist(MessageReceivedEvent e)
 	{
-        TextChannel objTextChannel = e.getTextChannel();
     	MusicPlayer player = manager.getPlayer(objTextChannel.getGuild());
     	if(player.getListener().getTracks().isEmpty())
     	{
@@ -97,7 +114,8 @@ public class PlaySongCommand implements Command
     		return;
     	}
     	player.getListener().getTracks().clear();
-    	manager.getPlayer(e.getGuild()).skipTrack();
+    	manager.getPlayer(objGuild).skipTrack();
+    	this.manager = new MusicManager();
     	objTextChannel.sendMessage("Playlist cleared.").queue();
     	
 	}
