@@ -37,7 +37,8 @@ public class PlaySongCommand implements Command
 	{		
 		if(args[0].equals("play"))
 		{			
-			if(!args[0].startsWith("https://www.youtube.com/watch?v="))
+			System.out.println(args[0]);
+			if(!args[1].startsWith("https://www.youtube.com/watch?v="))
 			{
 				StringBuilder builder = new StringBuilder();
 				for(int i = 1; i < args.length; i++)
@@ -50,7 +51,7 @@ public class PlaySongCommand implements Command
 			}
 			else
 			{
-				play(args[0], e);
+				play(args[1], e);
 			}
 		}
 		else if(args[0].equals("skip"))

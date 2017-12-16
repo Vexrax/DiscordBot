@@ -34,13 +34,15 @@ public class App
 	
 	public static HashMap<String, Command> commands = new HashMap<String, Command>();
 	public static HashMap<String, String> APIkeys = new HashMap<String, String>();
+	public static boolean serviceMode;
 	
-    public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException
+    public static void main(String[] args) throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException
     {
     	getApiKeys();
-        JDA bot = new JDABuilder(AccountType.BOT).setToken(APIkeys.get("DISCORD:")).buildBlocking(); //SET TOKEN
+    	JDA bot;
+    	bot = new JDABuilder(AccountType.BOT).setToken(APIkeys.get("DISCORD:")).buildBlocking();
         bot.addEventListener(new BotListener());
-        addCommands();
+        addCommands();//SET TOKEN
     }
     
     public static void handleCommand(CommandParser.CommandContainer cmd)

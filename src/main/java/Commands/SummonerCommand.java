@@ -59,6 +59,7 @@ public class SummonerCommand implements Command
 				builder.appendDescription("W: " + rankData[i].getWins() + " L: " + rankData[i].getLosses() + "\n");
 			}
 			e.getMessage().getTextChannel().sendMessage(builder.build()).queue();
+			System.out.println(SummonerData.getId());
 		}
 		catch(Exception exception)
 		{
