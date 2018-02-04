@@ -1,1 +1,1 @@
-worker: java src\main\java\DiscordBot\Skynet\App.java
+worker: sh target/bin/worker
