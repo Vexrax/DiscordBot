@@ -21,7 +21,7 @@
             <programs>
                 <program>
                     <mainClass>app</mainClass>
-                    <name>worker</name>
+                    <name>app</name>
                 </program>
             </programs>
           </configuration>
