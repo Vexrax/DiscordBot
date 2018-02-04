@@ -1,18 +1,12 @@
 package pokemon;
 
 import java.awt.Color;
-import java.awt.List;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.net.UnknownHostException;
+
 import java.util.ArrayList;
-import java.util.function.IntPredicate;
 
-import javax.swing.plaf.basic.BasicScrollPaneUI.VSBChangeListener;
 
-import org.apache.commons.io.output.ThresholdingOutputStream;
-import org.omg.CORBA.PRIVATE_MEMBER;
-import org.omg.CORBA.SystemException;
+
 
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
