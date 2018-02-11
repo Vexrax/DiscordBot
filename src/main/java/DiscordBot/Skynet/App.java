@@ -19,6 +19,7 @@ import Commands.PlaySongCommand;
 import Commands.PokemonBattleCommand;
 import Commands.QuoteCommand;
 import Commands.RollDiceCommand;
+import Commands.SummonCommand;
 import Commands.SummonerCommand;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
@@ -101,6 +102,7 @@ public class App
         commands.put("chat", new ChatBotTensorFlowCommand());
         commands.put("end", new EndBotCommand());
         commands.put("summoner", new SummonerCommand(APIkeys.get("RIOT:")));
+        commands.put("summon", new SummonCommand());
     }
 }
 
