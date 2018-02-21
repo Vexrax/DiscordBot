@@ -1,6 +1,8 @@
 package Commands;
 
 
+import java.io.PrintWriter;
+
 import Backend.Search;
 import music.MusicManager;
 import music.MusicPlayer;
@@ -79,7 +81,6 @@ public class PlaySongCommand implements Command
 		System.out.println(song);
 		if(objGuild == null)
 			return;
-		
         if(!objGuild.getAudioManager().isConnected() && !objGuild.getAudioManager().isAttemptingToConnect())
 		{
 			VoiceChannel voicechannel = objGuild.getMember(objUser).getVoiceState().getChannel();

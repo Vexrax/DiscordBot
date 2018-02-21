@@ -32,7 +32,7 @@ public class AudioListener extends AudioEventAdapter
 		{
 			if(!player.getGuild().getAudioManager().getConnectedChannel().equals(null))
 			{
-					this.player.getGuild().getAudioManager().closeAudioConnection(); 
+				this.player.getGuild().getAudioManager().closeAudioConnection(); 
 			}
 			return;
 		}

@@ -17,12 +17,15 @@ public class AudioHandler implements AudioSendHandler
 
 	public boolean canProvide() 
 	{
-		if(this.lastframe == null)
-				this.lastframe = audioplayer.provide();
+		if(this.lastframe == null) 
+		{
+			this.lastframe = audioplayer.provide();
+		}
 		return this.lastframe != null;
 	}
 	
-	public byte[] provide20MsAudio() {
+	public byte[] provide20MsAudio()
+	{
 		byte[] data = canProvide() ? this.lastframe.data : null;
 		this.lastframe = null; 	
 		return data;
