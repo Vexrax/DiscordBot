@@ -39,11 +39,18 @@ public class App
 	
     public static void main(String[] args) throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException
     {
-    	getApiKeys();
-    	JDA bot;
-    	bot = new JDABuilder(AccountType.BOT).setToken(APIkeys.get("DISCORD:")).buildBlocking();
-        bot.addEventListener(new BotListener());
-        addCommands();//SET TOKEN
+    	try
+		{
+			getApiKeys();
+			JDA bot;
+			bot = new JDABuilder(AccountType.BOT).setToken(APIkeys.get("DISCORD:")).buildBlocking();
+			bot.addEventListener(new BotListener());
+			addCommands();//SET TOKEN
+		}
+		catch(Exception e)
+		{
+			System.out.println("exception caught: " + e);
+		}
     }
     
     public static void handleCommand(CommandParser.CommandContainer cmd)

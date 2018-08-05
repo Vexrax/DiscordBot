@@ -30,9 +30,9 @@ public class AudioListener extends AudioEventAdapter
 	{
 		if(this.tracks.isEmpty())
 		{
-			if(!player.getGuild().getAudioManager().getConnectedChannel().equals(null))
+			if(!(player.getGuild().getAudioManager().getConnectedChannel() == null))
 			{
-				//this.player.getGuild().getAudioManager().closeAudioConnection();
+				this.player.getGuild().getAudioManager().closeAudioConnection();
 			}
 			return;
 		}
@@ -43,11 +43,14 @@ public class AudioListener extends AudioEventAdapter
 	{
 			if(endReason.mayStartNext)
 				nextTrack();
-
 	}
 	public void queue(AudioTrack track)
 	{
 		if(!player.getAudioPlayer().startTrack(track, true))
 			tracks.offer(track);
+	}
+	public void pause()
+	{
+		this.player.getAudioPlayer().setPaused(true);
 	}
 }
