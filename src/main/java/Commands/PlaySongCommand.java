@@ -7,8 +7,10 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 
 import Backend.Search;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import music.MusicManager;
 import music.MusicPlayer;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -25,7 +27,7 @@ public class PlaySongCommand implements Command
     private TextChannel objTextChannel;
     private Guild objGuild;
 	private MusicManager manager = new MusicManager();
-	private String[] valid_commands = {"play", "skip", "clear", "banish"};
+	private String[] valid_commands = {"play", "skip", "clear", "banish", "get"};
 
 
 	public PlaySongCommand(String YoutubeApiKey)
@@ -74,6 +76,18 @@ public class PlaySongCommand implements Command
 		else if(args[0].equals("banish"))
 		{
 			banish(e);
+		}
+		else if(args[0].equals("get"))
+		{
+			if(args[1].equals("playlist"))
+			{
+				getPlaylist(e);
+			}
+			else if(args[1].equals("current"))
+			{
+				getCurrentSong(e);
+			}
+
 		}
 
 	}
@@ -137,6 +151,23 @@ public class PlaySongCommand implements Command
 	{
 		objGuild.getAudioManager().closeAudioConnection();
 		objTextChannel.sendMessage("Leaving the channel.").queue();
+	}
+	public void getPlaylist(MessageReceivedEvent e)
+	{
+		MusicPlayer player = manager.getPlayer(objTextChannel.getGuild());
+		EmbedBuilder builder = new EmbedBuilder();
+		builder.appendDescription("Current Playlist:\n");
+		for (AudioTrack track : player.getListener().getTracks())
+		{
+			builder.appendDescription(track.getInfo().title + '\n');
+		}
+		objTextChannel.sendMessage(builder.build()).queue();
+
+	}
+	public void getCurrentSong(MessageReceivedEvent e)
+	{
+		objTextChannel.sendMessage("Current Song:\n").queue();
+		objTextChannel.sendMessage(manager.getPlayer(objTextChannel.getGuild()).getAudioPlayer().getPlayingTrack().getInfo().title).queue();
 	}
 
 }
