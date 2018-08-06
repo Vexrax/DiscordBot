@@ -2,20 +2,25 @@ package music;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import java.util.Timer;
+import java.util.TimerTask;
+
+
 
 public class AudioListener extends AudioEventAdapter
 {
 	private final BlockingQueue<AudioTrack> tracks = new LinkedBlockingQueue<AudioTrack>();
 	private final MusicPlayer player;
-	
+
 	public AudioListener(MusicPlayer player)
 	{
-		this.player = player; 
+		this.player = player;
 	}
 	public BlockingQueue<AudioTrack> getTracks()
 	{
@@ -26,13 +31,20 @@ public class AudioListener extends AudioEventAdapter
 		return this.tracks.size();
 	}
 
-	public void nextTrack()
+	public  void nextTrack()
 	{
-		if(this.tracks.isEmpty())
+		if(tracks.isEmpty())
 		{
-			if(!(player.getGuild().getAudioManager().getConnectedChannel() == null))
+			if(player.getGuild().getAudioManager().getConnectedChannel() != null)
 			{
-				this.player.getGuild().getAudioManager().closeAudioConnection();
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						if (tracks.size() <= 0) {
+							player.getGuild().getAudioManager().closeAudioConnection();
+						}
+					}
+				}, 500);
 			}
 			return;
 		}

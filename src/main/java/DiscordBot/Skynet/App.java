@@ -24,6 +24,7 @@ import Commands.SummonerCommand;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 
@@ -43,7 +44,10 @@ public class App
 		{
 			getApiKeys();
 			JDA bot;
-			bot = new JDABuilder(AccountType.BOT).setToken(APIkeys.get("DISCORD:")).buildBlocking();
+			bot = new JDABuilder(AccountType.BOT)
+					.setToken(APIkeys.get("DISCORD:"))
+					.setGame(Game.of("Taking Over The World"))
+					.buildBlocking();
 			bot.addEventListener(new BotListener());
 			addCommands();//SET TOKEN
 		}

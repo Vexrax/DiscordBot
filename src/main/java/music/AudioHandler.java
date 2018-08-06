@@ -2,13 +2,15 @@ package music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
+import com.sedmelluq.discord.lavaplayer.format.OpusAudioDataFormat;
+
 
 import net.dv8tion.jda.core.audio.AudioSendHandler;
 
 public class AudioHandler implements AudioSendHandler
 {
 	private final AudioPlayer audioplayer;
-	private AudioFrame lastframe;
+	private AudioFrame lastFrame;
 	
 	public AudioHandler(AudioPlayer audioplayer)
 	{
@@ -17,22 +19,17 @@ public class AudioHandler implements AudioSendHandler
 
 	public boolean canProvide() 
 	{
-		if(this.lastframe == null) 
-		{
-			this.lastframe = audioplayer.provide();
-		}
-		return this.lastframe != null;
+		lastFrame = audioplayer.provide();
+		return lastFrame != null;
 	}
 	
 	public byte[] provide20MsAudio()
 	{
-		byte[] data = canProvide() ? this.lastframe.data : null;
-		this.lastframe = null; 	
-		return data;
+		return lastFrame.getData();
 	}
 
 	public boolean isOpus()
 	{
-		return true;
+		return lastFrame != null && lastFrame.getFormat() instanceof OpusAudioDataFormat;
 	}
 }

@@ -1,7 +1,10 @@
 package Commands;
 
-
+import java.util.Timer;
+import java.util.TimerTask;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 import Backend.Search;
 import music.MusicManager;
@@ -13,6 +16,8 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.entities.Guild;
 
+
+
 public class PlaySongCommand implements Command
 {
 	private final String API_KEY;
@@ -20,6 +25,8 @@ public class PlaySongCommand implements Command
     private TextChannel objTextChannel;
     private Guild objGuild;
 	private MusicManager manager = new MusicManager();
+	private String[] valid_commands = {"play", "skip", "clear", "banish"};
+
 
 	public PlaySongCommand(String YoutubeApiKey)
 	{
@@ -30,7 +37,7 @@ public class PlaySongCommand implements Command
         objUser = e.getAuthor();   
         objTextChannel = e.getTextChannel();
         objGuild = e.getGuild();
-		if(args[0].equals("play") || args[0].equals("skip") || args[0].equals("clear"))
+		if(Arrays.asList(valid_commands).contains(args[0]))
 			return true;
 		return false;
 	}
@@ -48,7 +55,7 @@ public class PlaySongCommand implements Command
 					builder.append(args[i] + " ");
 				}
 				Search url = new Search();
-	        	String urlToPlay = "https://www.youtube.com/watch?v=" + url.searchToUrl(builder.toString(), this.API_KEY);
+	        	String urlToPlay = "https://www.youtube.com/watch?v=" + url.searchToUrl(builder.toString() + "lyrics", this.API_KEY);
 				play(urlToPlay, e);
 			}
 			else
@@ -64,6 +71,11 @@ public class PlaySongCommand implements Command
 		{
 			clearPlaylist(e);
 		}
+		else if(args[0].equals("banish"))
+		{
+			banish(e);
+		}
+
 	}
 
 	public String help() {
@@ -103,7 +115,7 @@ public class PlaySongCommand implements Command
     	if(manager.getPlayer(objGuild).getListener().getTrackSize() == 0)
     	{
     		this.manager = new MusicManager();
-    	}
+		}
     	objTextChannel.sendMessage("Skipping current song").queue();
 	}
 	
@@ -120,6 +132,11 @@ public class PlaySongCommand implements Command
     	this.manager = new MusicManager();
     	objTextChannel.sendMessage("Playlist cleared.").queue();
     	
+	}
+	public void banish(MessageReceivedEvent e)
+	{
+		objGuild.getAudioManager().closeAudioConnection();
+		objTextChannel.sendMessage("Leaving the channel.").queue();
 	}
 
 }
