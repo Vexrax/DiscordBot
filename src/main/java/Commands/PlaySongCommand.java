@@ -45,10 +45,10 @@ public class PlaySongCommand implements Command
 	}
 
 	public void action(String[] args, MessageReceivedEvent e) 
-	{		
+	{
+		System.out.println(args[0]);
 		if(args[0].equals("play"))
 		{			
-			System.out.println(args[0]);
 			if(!args[1].startsWith("https://www.youtube.com/watch?v="))
 			{
 				StringBuilder builder = new StringBuilder();
@@ -87,9 +87,7 @@ public class PlaySongCommand implements Command
 			{
 				getCurrentSong(e);
 			}
-
 		}
-
 	}
 
 	public String help() {
