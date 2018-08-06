@@ -158,6 +158,11 @@ public class PlaySongCommand implements Command
 		for (AudioTrack track : player.getListener().getTracks())
 		{
 			builder.appendDescription(track.getInfo().title + '\n');
+			if(builder.getDescriptionBuilder().length() >= 1900)
+			{
+				objTextChannel.sendMessage(builder.build()).queue();
+				builder = new EmbedBuilder();
+			}
 		}
 		objTextChannel.sendMessage(builder.build()).queue();
 

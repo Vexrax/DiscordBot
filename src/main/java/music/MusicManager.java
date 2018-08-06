@@ -57,13 +57,18 @@ public class MusicManager
 			public void playlistLoaded(AudioPlaylist playlist) 
 			{
 				StringBuilder builder = new StringBuilder();
-				builder.append("adding").append(playlist.getName()).append("**\n");
+				builder.append("adding: ").append(playlist.getName()).append("**\n");
 				
-				for(int i = 0; i < playlist.getTracks().size() && i < 5; i++)
+				for(int i = 0; i < playlist.getTracks().size() && i < Integer.MAX_VALUE; i++)
 				{
 					AudioTrack track = playlist.getTracks().get(i);
-					builder.append("\n").append("->**" + track.getInfo().title + "**");
+					builder.append("\n").append("->" + track.getInfo().title + "");
 					player.playTrack(track);
+					if(builder.length() >= 1900)
+					{
+						channel.sendMessage(builder.toString()).queue();
+						builder = new StringBuilder();
+					}
 				}
 				channel.sendMessage(builder.toString()).queue();
 			}
