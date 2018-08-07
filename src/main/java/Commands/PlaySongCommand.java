@@ -39,6 +39,11 @@ public class PlaySongCommand implements Command
         objUser = e.getAuthor();   
         objTextChannel = e.getTextChannel();
         objGuild = e.getGuild();
+        if(args.length == 0)
+        {
+			objTextChannel.sendMessage(help()).queue();
+			return false;
+		}
 		if(Arrays.asList(valid_commands).contains(args[0]))
 			return true;
 		return false;
@@ -91,8 +96,14 @@ public class PlaySongCommand implements Command
 	}
 
 	public String help() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder builder = new StringBuilder();
+		builder.append("Song Help:\n");
+		builder.append("//song play (song) 					-> play a song or playlist\n");
+		builder.append("//song clear		  				-> clear the queue\n");
+		builder.append("//song get  (current/playlist) 		-> get the current playing song or the playlist\n");
+		builder.append("//song banish 						-> make the bot leave your channel\n");
+		builder.append("//song skip 						-> skip the current song\n");
+		return builder.toString();
 	}
 
 	public void executed(boolean success, MessageReceivedEvent event) {

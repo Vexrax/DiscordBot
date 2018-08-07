@@ -10,17 +10,7 @@ import javax.security.auth.login.LoginException;
 
 import Backend.BotListener;
 import Backend.CommandParser;
-import Commands.ChatBotTensorFlowCommand;
-import Commands.Command;
-import Commands.EndBotCommand;
-import Commands.FlipCoinCommand;
-import Commands.PingCommand;
-import Commands.PlaySongCommand;
-import Commands.PokemonBattleCommand;
-import Commands.QuoteCommand;
-import Commands.RollDiceCommand;
-import Commands.SummonCommand;
-import Commands.SummonerCommand;
+import Commands.*;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -114,6 +104,7 @@ public class App
         commands.put("end", new EndBotCommand());
         commands.put("summoner", new SummonerCommand(APIkeys.get("RIOT:")));
         commands.put("summon", new SummonCommand());
+        commands.put("", new HelpCommand());
     }
 }
 
