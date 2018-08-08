@@ -105,7 +105,9 @@ public class App
         commands.put("summoner", new SummonerCommand(APIkeys.get("RIOT:")));
         commands.put("summon", new SummonCommand());
         commands.put("", new HelpCommand());
-    }
+		commands.put("help", new HelpCommand());
+
+	}
 }
 
 
