@@ -100,7 +100,6 @@ public class App
         commands.put("rolldice", new RollDiceCommand());
         commands.put("flipcoin", new FlipCoinCommand());
         commands.put("pokemonbattle", new PokemonBattleCommand());
-        commands.put("chat", new ChatBotTensorFlowCommand());
         commands.put("end", new EndBotCommand());
         commands.put("summoner", new SummonerCommand(APIkeys.get("RIOT:")));
         commands.put("summon", new SummonCommand());
