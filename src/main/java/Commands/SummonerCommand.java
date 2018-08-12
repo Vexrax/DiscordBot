@@ -38,7 +38,7 @@ public class SummonerCommand implements Command
 		{
 			String json = "";
 			EmbedBuilder builder = new EmbedBuilder();
-			
+
 			json = getJson("https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/" + args[0] + "?api_key=" + API_KEY);
 			Gson gson = new Gson();
 			SummonerData SummonerData = gson.fromJson(json, SummonerData.class);
@@ -63,6 +63,7 @@ public class SummonerCommand implements Command
 		}
 		catch(Exception exception)
 		{
+			System.out.println(exception.toString());
 			e.getMessage().getTextChannel().sendMessage("Summoner could not be found.").queue();
 		}
 	}
