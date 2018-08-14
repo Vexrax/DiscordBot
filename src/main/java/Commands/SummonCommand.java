@@ -1,7 +1,5 @@
 package Commands;
 
-import org.omg.CORBA.PRIVATE_MEMBER;
-
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
