@@ -1,8 +1,5 @@
 package Backend;
 
-import java.awt.Event;
-
-import org.apache.http.impl.execchain.MainClientExec;
 
 import DiscordBot.Skynet.App;
 import net.dv8tion.jda.core.events.ReadyEvent;
