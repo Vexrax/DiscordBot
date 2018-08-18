@@ -2,12 +2,7 @@ package pokemon;
 
 import java.awt.Color;
 import java.io.IOException;
-
 import java.util.ArrayList;
-
-
-
-
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -19,7 +14,6 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.impl.UserImpl;
 import pokeAPI.MoveApi;
-import pokeAPI.Moves;
 import pokeAPI.PokeApi;
 
 public class BattleModel 
