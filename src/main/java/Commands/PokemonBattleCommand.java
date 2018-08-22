@@ -27,7 +27,6 @@ public class PokemonBattleCommand implements Command
 		{
 			return true;
 		}
-		//Add more if statements for battle commands
 		return false;
 	}
 
