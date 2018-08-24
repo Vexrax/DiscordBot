@@ -1,6 +1,5 @@
 package Commands;
 
-import org.slf4j.Marker;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
