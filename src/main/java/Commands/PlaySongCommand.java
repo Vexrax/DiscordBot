@@ -98,11 +98,11 @@ public class PlaySongCommand implements Command
 	public String help() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Song Help:\n");
-		builder.append("//song play (song) 					-> play a song or playlist\n");
-		builder.append("//song clear		  				-> clear the queue\n");
-		builder.append("//song get  (current/playlist) 		-> get the current playing song or the playlist\n");
-		builder.append("//song banish 						-> make the bot leave your channel\n");
-		builder.append("//song skip 						-> skip the current song\n");
+		builder.append("//song play (song)\t\t\t-> play a song or playlist\n");
+		builder.append("//song clear\t\t\t-> clear the queue\n");
+		builder.append("//song get  (current/playlist)\t\t\t-> get the current playing song or the playlist\n");
+		builder.append("//song banish\t\t\t-> make the bot leave your channel\n");
+		builder.append("//song skip\t\t\t-> skip the current song\n");
 		return builder.toString();
 	}
 
