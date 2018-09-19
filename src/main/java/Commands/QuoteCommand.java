@@ -46,6 +46,10 @@ public class QuoteCommand implements Command
 			}
 			addQuote(e, builder.toString());
 		}
+		if(args[0].equals(valid_commands[1]))
+		{
+			removeQuote(e);
+		}
 		if(args[0].equals(valid_commands[2]))  //vote
 		{
 			if(args.length == 2 && args[1].equals("force"))
@@ -54,7 +58,6 @@ public class QuoteCommand implements Command
 				return;
 			}
 			addVote(e, false);
-
 		}
 	}
 
@@ -67,6 +70,12 @@ public class QuoteCommand implements Command
 		// TODO Auto-generated method stub
 		
 	}
+	public void removeQuote(MessageReceivedEvent e)
+	{
+		MessageChannel objChannel = e.getChannel();
+		objChannel.sendMessage("This feature is not implimented yet, come back soon.").queue();
+	}
+
 	public void sendQuote(MessageReceivedEvent e)
 	{
 		MessageChannel objChannel = e.getChannel();
@@ -97,37 +106,46 @@ public class QuoteCommand implements Command
 	private void addVote(MessageReceivedEvent e, boolean force)
 	{
 		final MessageChannel objChannel = e.getChannel();
-
+		if(force && Utility.getUserRank(e.getAuthor().getId()) != Ranks.Admin)
+		{
+			objChannel.sendMessage("You cannot force the vote to pass.").queue();
+		}
 		if(quoteBeingAddedOrRemoved)
 		{
-			if(force)
+			if(!votedList.contains(e.getAuthor().getId()))
 			{
-				if(Utility.getUserRank(e.getAuthor().getId()) == Ranks.Admin)
+				votedList.add(e.getAuthor().getId());
+				if((Utility.getUserRank(e.getAuthor().getId()) == Ranks.Admin) && force)
 				{
 					objChannel.sendMessage(e.getAuthor().getName() + " is forcing the vote to pass").queue();
 					currentVotes += requiredVotes + 1;
 					objChannel.sendMessage("Current Votes: " + currentVotes + " Required Votes: " + requiredVotes).queue();
 					return;
 				}
+				else if(Utility.getUserRank(e.getAuthor().getId()) == Ranks.Terminator)
+				{
+					currentVotes += 2;
+					SendVoteBeingAddedToTally(objChannel);
+					return;
+				}
 				else
 				{
-					objChannel.sendMessage("You cannot force the vote.").queue();
+					currentVotes += 1;
+					SendVoteBeingAddedToTally(objChannel);
+					return;
 				}
-				return;
-			}
-			if(!votedList.contains(e.getAuthor().getId()))
-			{
-				votedList.add(e.getAuthor().getId());
-				currentVotes += 1;
-				objChannel.sendMessage("Your vote has been added").queue();
-				objChannel.sendMessage("Current Votes: " + currentVotes + " Required Votes: " + requiredVotes).queue();
-				return;
 			}
 			objChannel.sendMessage("You have already voted").queue();
 			return;
 		}
 		objChannel.sendMessage("No vote currently being conducted").queue();
 
+	}
+
+	private void SendVoteBeingAddedToTally(MessageChannel objChannel)
+	{
+		objChannel.sendMessage("Your vote has been added").queue();
+		objChannel.sendMessage("Current Votes: " + currentVotes + " Required Votes: " + requiredVotes).queue();
 	}
 
 	public void addQuote(MessageReceivedEvent e, final String QuoteToBeAdded)
