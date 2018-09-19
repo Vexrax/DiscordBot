@@ -27,9 +27,10 @@ public class HelpCommand implements Command
         builder.appendDescription("//ping\n");
         builder.appendDescription("//roledice\n");
         builder.appendDescription("//flipcoin (heads, tails)\n");
-        builder.appendDescription("//quote\n");
+        builder.appendDescription("//quote (add, remove, vote)\n");
         builder.appendDescription("//summon\n");
         builder.appendDescription("//pokemonbattle\n");
+        builder.appendDescription("Example command '//song play warriors'");
         objTextChannel.sendMessage(builder.build()).queue();
     }
     public String help()
