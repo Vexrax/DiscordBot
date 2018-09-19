@@ -32,7 +32,6 @@ public class QuoteCommand implements Command
 
 	public void action(String[] args, MessageReceivedEvent e)
 	{
-		System.out.println(args);
 		if(args.length == 0)
 		{
 			sendQuote(e);
@@ -134,7 +133,6 @@ public class QuoteCommand implements Command
 	public void addQuote(MessageReceivedEvent e, final String QuoteToBeAdded)
 	{
 		final MessageChannel objChannel = e.getChannel();
-		System.out.println(QuoteToBeAdded);
 		if(quoteBeingAddedOrRemoved)
 		{
 			objChannel.sendMessage("A vote is already in progress please wait for the vote to finish before adding a quote!").queue();
@@ -160,7 +158,7 @@ public class QuoteCommand implements Command
 				resetVoting();
 				quoteBeingAddedOrRemoved = false;
 			}
-		}, 60000);
+		}, 120000);
 	}
 	private void resetVoting()
 	{
