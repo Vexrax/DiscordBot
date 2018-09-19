@@ -18,7 +18,7 @@ public class QuoteCommand implements Command
 	private int requiredVotes = 4;
 	private int currentVotes = 0;
 	private List<String> votedList = new ArrayList<String>();
-	Util Utility = new Util();
+	private Util Utility = new Util();
 
 	public boolean called(String[] args, MessageReceivedEvent event) {
 		if (args.length == 0) {
