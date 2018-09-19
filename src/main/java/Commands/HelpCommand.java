@@ -29,7 +29,7 @@ public class HelpCommand implements Command
         builder.appendDescription("//flipcoin (heads, tails)\n");
         builder.appendDescription("//quote (add, remove, vote)\n");
         builder.appendDescription("//summon\n");
-        builder.appendDescription("//pokemonbattle\n");
+        builder.appendDescription("//pokemonbattle (newbattle, switch, move)\n");
         builder.appendDescription("Example command '//song play warriors'");
         objTextChannel.sendMessage(builder.build()).queue();
     }

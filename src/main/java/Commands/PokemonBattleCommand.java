@@ -13,6 +13,10 @@ public class PokemonBattleCommand implements Command
 	BattleModel battle;
 	public boolean called(String[] args, MessageReceivedEvent e) 
 	{
+		if(args.length == 0)
+		{
+			return false;
+		}
 		System.out.println(args[0]);
 		if(args[0].equals("newbattle")) //make sure to check that theres a user in hte mentions
 		{
