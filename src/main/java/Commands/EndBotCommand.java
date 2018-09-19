@@ -1,12 +1,14 @@
 package Commands;
 
+import Backend.Ranks;
+import Backend.Util;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class EndBotCommand implements Command
 {
-
+	Util utility = new Util();
 	public boolean called(String[] args, MessageReceivedEvent e) {
-		if(e.getAuthor().getName().equals("vexrax") && (e.getAuthor().getId().equals("188313190214533120")))
+		if((utility.getUserRank(e.getAuthor().getId())) == Ranks.Admin)
 		{
 			e.getChannel().sendMessage("Admin of skynet " + e.getAuthor().getName() + " has ended the proccess.").queue();
 			return true;
