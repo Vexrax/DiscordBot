@@ -13,12 +13,12 @@ public class QuoteCommand implements Command
 	private String[] valid_commands = {"add", "remove", "vote"};
 	private final String HELP = "Usage: = ~//quote";
 	String quoteFilePath = "quoteFile.txt";
+	private Util Utility = new Util();
 
 	private boolean quoteBeingAddedOrRemoved = false;
 	private int requiredVotes = 4;
 	private int currentVotes = 0;
 	private List<String> votedList = new ArrayList<String>();
-	private Util Utility = new Util();
 
 	public boolean called(String[] args, MessageReceivedEvent event) {
 		if (args.length == 0) {
@@ -54,10 +54,10 @@ public class QuoteCommand implements Command
 		{
 			if(args.length == 2 && args[1].equals("force"))
 			{
-				addVote(e, true);
+				Vote(e, true);
 				return;
 			}
-			addVote(e, false);
+			Vote(e, false);
 		}
 	}
 
@@ -70,6 +70,8 @@ public class QuoteCommand implements Command
 		// TODO Auto-generated method stub
 		
 	}
+
+
 	public void removeQuote(MessageReceivedEvent e)
 	{
 		MessageChannel objChannel = e.getChannel();
@@ -81,13 +83,7 @@ public class QuoteCommand implements Command
 		MessageChannel objChannel = e.getChannel();
 		try
 		{
-			BufferedReader textreader = new BufferedReader(new FileReader(quoteFilePath));
-			int numberoflines = 0;
-			while(textreader.readLine() != null)
-			{
-				numberoflines ++;
-			}
-			textreader.close();
+			int numberoflines = Utility.getFileLineLength(quoteFilePath);
 			String[] quotearray = new String[numberoflines];
 			BufferedReader textreaderforquotes = new BufferedReader(new FileReader(quoteFilePath));
 			for(int i = 0; i < numberoflines; i++)
@@ -103,7 +99,7 @@ public class QuoteCommand implements Command
 			objChannel.sendMessage("Somethng went wrong, missing quotefile string, check App.java").queue();
 		}
 	}
-	private void addVote(MessageReceivedEvent e, boolean force)
+	private void Vote(MessageReceivedEvent e, boolean force)
 	{
 		final MessageChannel objChannel = e.getChannel();
 		if(force && Utility.getUserRank(e.getAuthor().getId()) != Ranks.Admin)
@@ -114,32 +110,40 @@ public class QuoteCommand implements Command
 		{
 			if(!votedList.contains(e.getAuthor().getId()))
 			{
-				votedList.add(e.getAuthor().getId());
-				if((Utility.getUserRank(e.getAuthor().getId()) == Ranks.Admin) && force)
-				{
-					objChannel.sendMessage(e.getAuthor().getName() + " is forcing the vote to pass").queue();
-					currentVotes += requiredVotes + 1;
-					objChannel.sendMessage("Current Votes: " + currentVotes + " Required Votes: " + requiredVotes).queue();
-					return;
-				}
-				else if(Utility.getUserRank(e.getAuthor().getId()) == Ranks.Terminator)
-				{
-					currentVotes += 2;
-					SendVoteBeingAddedToTally(objChannel);
-					return;
-				}
-				else
-				{
-					currentVotes += 1;
-					SendVoteBeingAddedToTally(objChannel);
-					return;
-				}
+				addVote(e, force, objChannel);
+				return;
 			}
 			objChannel.sendMessage("You have already voted").queue();
 			return;
 		}
 		objChannel.sendMessage("No vote currently being conducted").queue();
 
+	}
+
+
+
+	private void addVote(MessageReceivedEvent e, boolean force, MessageChannel objChannel)
+	{
+		votedList.add(e.getAuthor().getId());
+		if((Utility.getUserRank(e.getAuthor().getId()) == Ranks.Admin) && force)
+		{
+			objChannel.sendMessage(e.getAuthor().getName() + " is forcing the vote to pass").queue();
+			currentVotes += requiredVotes + 1;
+			objChannel.sendMessage("Current Votes: " + currentVotes + " Required Votes: " + requiredVotes).queue();
+			return;
+		}
+		else if(Utility.getUserRank(e.getAuthor().getId()) == Ranks.Terminator)
+		{
+			currentVotes += 2;
+			SendVoteBeingAddedToTally(objChannel);
+			return;
+		}
+		else
+		{
+			currentVotes += 1;
+			SendVoteBeingAddedToTally(objChannel);
+			return;
+		}
 	}
 
 	private void SendVoteBeingAddedToTally(MessageChannel objChannel)
@@ -156,6 +160,11 @@ public class QuoteCommand implements Command
 			objChannel.sendMessage("A vote is already in progress please wait for the vote to finish before adding a quote!").queue();
 			return;
 		}
+		SetUpVoteForQuoteBeingAdded(QuoteToBeAdded, objChannel);
+	}
+
+	private void SetUpVoteForQuoteBeingAdded(final String QuoteToBeAdded, final MessageChannel objChannel)
+	{
 		quoteBeingAddedOrRemoved = true;
 		objChannel.sendMessage("A vote for the quote:\n " +
 				"' " + QuoteToBeAdded + "' has been started\n " +
@@ -178,6 +187,7 @@ public class QuoteCommand implements Command
 			}
 		}, 120000);
 	}
+
 	private void resetVoting()
 	{
 		currentVotes = 0;
