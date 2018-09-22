@@ -39,16 +39,13 @@ public class QuoteCommand implements Command
 		}
 		if(args[0].equals(valid_commands[0])) //add
 		{
-			StringBuilder builder = new StringBuilder();
-			for(int i = 1; i < args.length; i++)
-			{
-				builder.append(args[i] + " ");
-			}
-			addQuote(e, builder.toString());
+			String quote = ConvertArgListToSingleString(args, 1);
+			addQuote(e, quote);
 		}
 		if(args[0].equals(valid_commands[1]))
 		{
-			removeQuote(e);
+			String quote = ConvertArgListToSingleString(args, 1);
+			removeQuote(e,quote);
 		}
 		if(args[0].equals(valid_commands[2]))  //vote
 		{
@@ -61,6 +58,15 @@ public class QuoteCommand implements Command
 		}
 	}
 
+	private String ConvertArgListToSingleString(String[] args, int startindex) {
+		StringBuilder builder = new StringBuilder();
+		for(int i = startindex; i < args.length; i++)
+		{
+			builder.append(args[i] + " ");
+		}
+		return builder.toString();
+	}
+
 	public String help() {
 		// TODO Auto-generated method stub
 		return HELP;
@@ -70,12 +76,19 @@ public class QuoteCommand implements Command
 		// TODO Auto-generated method stub
 		
 	}
-
-
-	public void removeQuote(MessageReceivedEvent e)
+	public void removeQuote(MessageReceivedEvent e, String quoteToRemove)
 	{
 		MessageChannel objChannel = e.getChannel();
-		objChannel.sendMessage("This feature is not implimented yet, come back soon.").queue();
+		objChannel.sendMessage("This feature isnt ready yet!").queue();
+		if(true)return;
+
+		if (isVoteInProgress(objChannel)) return;
+		if(!isQuoteInFile(quoteToRemove))
+		{
+			objChannel.sendMessage("Quote not found in quote file, quote must be formatted exactly how it appears in the file.").queue();
+			return;
+		}
+		SetUpVoteForQuoteBeingRemoved(quoteToRemove, objChannel);
 	}
 
 	public void sendQuote(MessageReceivedEvent e)
@@ -155,13 +168,43 @@ public class QuoteCommand implements Command
 	public void addQuote(MessageReceivedEvent e, final String QuoteToBeAdded)
 	{
 		final MessageChannel objChannel = e.getChannel();
+		if (isVoteInProgress(objChannel)) return;
+		SetUpVoteForQuoteBeingAdded(QuoteToBeAdded, objChannel);
+	}
+
+	private boolean isVoteInProgress(MessageChannel objChannel) {
 		if(quoteBeingAddedOrRemoved)
 		{
 			objChannel.sendMessage("A vote is already in progress please wait for the vote to finish before adding a quote!").queue();
-			return;
+			return true;
 		}
-		SetUpVoteForQuoteBeingAdded(QuoteToBeAdded, objChannel);
+		return false;
 	}
+	private void SetUpVoteForQuoteBeingRemoved(final String QuoteToBeRemoved, final MessageChannel objChannel)
+	{
+		quoteBeingAddedOrRemoved = true;
+		objChannel.sendMessage("A vote to REMOVE the quote:\n " +
+				" " + QuoteToBeRemoved + " has been started\n " +
+				"Use //quote vote for the quote.\n A minimum of "
+				+ requiredVotes + " vote(s) is needed for the vote to pass!").queue();
+		new Timer().schedule(new TimerTask() {
+			@Override
+			public void run() {
+				if(currentVotes >= requiredVotes)
+				{
+					removeQuoteFromFile(objChannel, QuoteToBeRemoved);
+					objChannel.sendMessage("The vote passed, quote being removed from quote list...").queue();
+				}
+				else
+				{
+					objChannel.sendMessage("Not enough votes received for the vote to pass!").queue();
+				}
+				resetVoting();
+				quoteBeingAddedOrRemoved = false;
+			}
+		}, 120000);
+	}
+
 
 	private void SetUpVoteForQuoteBeingAdded(final String QuoteToBeAdded, final MessageChannel objChannel)
 	{
@@ -188,6 +231,7 @@ public class QuoteCommand implements Command
 		}, 120000);
 	}
 
+
 	private void resetVoting()
 	{
 		currentVotes = 0;
@@ -205,6 +249,56 @@ public class QuoteCommand implements Command
 		catch (IOException e)
 		{
 			channel.sendMessage("IO Exception Caught!").queue();
+		}
+	}
+
+	private boolean isQuoteInFile(String quoteToRemove)
+	{
+		try
+		{
+			String trimmedQuoteToRemove = quoteToRemove.trim();
+			File inputFile = new File(quoteFilePath);
+			BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+			String currentLine;
+			while ((currentLine = reader.readLine()) != null)
+			{
+				String trimmedLine = currentLine.trim();
+				if (trimmedLine.equals(trimmedQuoteToRemove))
+					return true;
+			}
+			reader.close();
+		}
+		catch (IOException exception)
+		{
+
+		}
+		return false;
+	}
+
+	public void removeQuoteFromFile(MessageChannel objChannel, String quoteToRemove)
+	{
+		try
+		{
+			File inputFile = new File(quoteFilePath);
+			File tempFile = new File("myTempFile.txt");
+
+			BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+			String currentLine;
+
+			while ((currentLine = reader.readLine()) != null) {
+				String trimmedQuoteToRemove = quoteToRemove.trim();
+				String trimmedLine = currentLine.trim();
+				if (trimmedLine.equals(trimmedQuoteToRemove)) continue;
+				writer.write(currentLine + System.getProperty("line.separator"));
+			}
+			writer.close();
+			reader.close();
+			tempFile.renameTo(inputFile);
+		}
+		catch (IOException exception)
+		{
+			objChannel.sendMessage("An IO Error occured").queue();
 		}
 	}
 }
