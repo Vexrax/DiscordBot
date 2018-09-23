@@ -295,6 +295,7 @@ public class QuoteCommand implements Command
 			writer.close();
 			reader.close();
 			tempFile.renameTo(inputFile);
+			
 		}
 		catch (IOException exception)
 		{
