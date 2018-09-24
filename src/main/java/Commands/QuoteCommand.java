@@ -79,8 +79,8 @@ public class QuoteCommand implements Command
 	public void removeQuote(MessageReceivedEvent e, String quoteToRemove)
 	{
 		MessageChannel objChannel = e.getChannel();
-		objChannel.sendMessage("This feature isnt ready yet!").queue();
-		if(true)return;
+		//objChannel.sendMessage("This feature isnt ready yet!").queue();
+		//if(true)return;
 
 		if (isVoteInProgress(objChannel)) return;
 		if(!isQuoteInFile(quoteToRemove))
@@ -297,9 +297,9 @@ public class QuoteCommand implements Command
 			tempFile.renameTo(inputFile);
 			
 		}
-		catch (IOException exception)
+		catch (Exception exception)
 		{
-			objChannel.sendMessage("An IO Error occured").queue();
+			objChannel.sendMessage("An Error occured: " + exception.toString()).queue();
 		}
 	}
 }

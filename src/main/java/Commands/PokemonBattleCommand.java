@@ -35,10 +35,7 @@ public class PokemonBattleCommand implements Command
 
 	public void action(String[] args, MessageReceivedEvent e) 
 	{
-        Message objMsg = e.getMessage();
-        MessageChannel objChannel = e.getChannel();
-        User objUser = e.getAuthor();   
-        TextChannel objTextChannel = e.getTextChannel();
+        
     	if(args[0].equals("newbattle"))
     	{
     		NewBattle(e);
