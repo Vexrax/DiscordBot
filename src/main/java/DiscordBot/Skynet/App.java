@@ -10,6 +10,7 @@ import javax.security.auth.login.LoginException;
 
 import Backend.BotListener;
 import Backend.CommandParser;
+import Backend.Util;
 import Commands.*;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
@@ -27,9 +28,11 @@ public class App
 	public static HashMap<String, Command> commands = new HashMap<String, Command>();
 	public static HashMap<String, String> APIkeys = new HashMap<String, String>();
 	public static boolean serviceMode;
+	public static Util util = new Util();
 	
     public static void main(String[] args) throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException
     {
+
     	try
 		{
 			getApiKeys();
@@ -46,6 +49,31 @@ public class App
 			System.out.println("exception caught: " + e);
 		}
     }
+	private static void getApiKeys()
+	{
+		String path = API_KEY_PATH;
+		try
+		{
+			BufferedReader textreader = new BufferedReader(new FileReader(path));
+			int numberoflines = util.getFileLineLength(API_KEY_PATH);
+			textreader.close();
+			String[] quotearray = new String[numberoflines];
+			BufferedReader textreaderforquotes = new BufferedReader(new FileReader(path));
+			for(int i = 0; i < numberoflines; i++)
+			{
+				quotearray[i] = textreaderforquotes.readLine();
+				String[] split = quotearray[i].split(" ");
+				APIkeys.put(split[0], split[1]);
+			}
+			textreaderforquotes.close();
+		}
+
+		catch(IOException exception)
+		{
+			System.out.println("File Could Not Be Found");
+		}
+
+	}
     
     public static void handleCommand(CommandParser.CommandContainer cmd)
     {
@@ -63,35 +91,7 @@ public class App
     		}
     	}
     }
-    private static void getApiKeys()
-    {
-		String path = API_KEY_PATH;
-    	try
-    	{
-    		BufferedReader textreader = new BufferedReader(new FileReader(path));
-    		int numberoflines = 0;
-    		while(textreader.readLine() != null)
-    		{
-    			numberoflines ++;
-    		}
-    		textreader.close();
-    		String[] quotearray = new String[numberoflines]; 
-    		BufferedReader textreaderforquotes = new BufferedReader(new FileReader(path));
-    		for(int i = 0; i < numberoflines; i++)
-    		{
-    			quotearray[i] = textreaderforquotes.readLine();
-        		String[] split = quotearray[i].split(" ");
-    			APIkeys.put(split[0], split[1]);
-    		}
-    		textreaderforquotes.close();
-    	}  	
-    	
-    	catch(IOException exception) 
-    	{
-    		System.out.println("File Could Not Be Found");
-    	}
-    	
-    }
+
     private static void addCommands()
     {
         commands.put("ping", new PingCommand());
