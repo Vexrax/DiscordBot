@@ -27,7 +27,7 @@ public class App
 	
 	public static HashMap<String, Command> commands = new HashMap<String, Command>();
 	public static HashMap<String, String> APIkeys = new HashMap<String, String>();
-	public static boolean serviceMode;
+	public static boolean serviceMode = false;
 	public static Util util = new Util();
 	
     public static void main(String[] args) throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException
