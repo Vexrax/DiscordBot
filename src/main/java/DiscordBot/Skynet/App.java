@@ -35,7 +35,7 @@ public class App
 
     	try
 		{
-			getApiKeys();
+			getApiKeys(); //get the api keys
 			JDA bot;
 			bot = new JDABuilder(AccountType.BOT)
 					.setToken(APIkeys.get("DISCORD:"))
