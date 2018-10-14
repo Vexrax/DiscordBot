@@ -1,9 +1,6 @@
 package Commands;
 
-import java.util.Timer;
-import java.util.TimerTask;
-import java.io.PrintWriter;
-import java.lang.reflect.Array;
+
 import java.util.Arrays;
 
 import Backend.Search;
@@ -11,7 +8,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import music.MusicManager;
 import music.MusicPlayer;
 import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.VoiceChannel;
