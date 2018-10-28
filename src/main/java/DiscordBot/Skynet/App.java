@@ -58,14 +58,14 @@ public class App
 			int numberoflines = util.getFileLineLength(API_KEY_PATH);
 			textreader.close();
 			String[] quotearray = new String[numberoflines];
-			BufferedReader textreaderforquotes = new BufferedReader(new FileReader(path));
+			BufferedReader textReaderForQuotes = new BufferedReader(new FileReader(path));
 			for(int i = 0; i < numberoflines; i++)
 			{
-				quotearray[i] = textreaderforquotes.readLine();
+				quotearray[i] = textReaderForQuotes.readLine();
 				String[] split = quotearray[i].split(" ");
 				APIkeys.put(split[0], split[1]);
 			}
-			textreaderforquotes.close();
+			textReaderForQuotes.close();
 		}
 
 		catch(IOException exception)
