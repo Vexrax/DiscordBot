@@ -26,7 +26,7 @@ public class HelpCommand implements Command
         builder.appendDescription("//song (play, get, clear, skip, banish)\n");
         builder.appendDescription("//ping\n");
         builder.appendDescription("//roledice\n");
-        builder.appendDescription("//flipcoin (heads, tails)\n");
+        builder.appendDescription("//flipcoin \n");
         builder.appendDescription("//quote (add, remove, vote)\n");
         builder.appendDescription("//summon\n");
         builder.appendDescription("//pokemonbattle (newbattle, switch, move)\n");
