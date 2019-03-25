@@ -1,22 +1,16 @@
 package Commands;
 
 import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class HelpCommand implements Command
 {
-    private User objUser;
     private TextChannel objTextChannel;
-    private Guild objGuild;
 
     public boolean called(String[] args, MessageReceivedEvent e)
     {
-        objUser = e.getAuthor();
         objTextChannel = e.getTextChannel();
-        objGuild = e.getGuild();
         return true;
     }
     public void action(String[] args, MessageReceivedEvent e)
