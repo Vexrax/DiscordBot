@@ -17,9 +17,9 @@ public class FlipCoinCommand implements Command
 	{
         MessageChannel objChannel = e.getChannel();
         User objUser = e.getAuthor();   
-		String[] stringdict = {"Heads", "Tails"};
+		String[] stringdict = {CommandStrings.getInstance().HEADS, CommandStrings.getInstance().TAILS};
     	int Random = (int)(Math.random()*2);
-		objChannel.sendMessage("The Coin Landed on " + stringdict[Random]).queue();
+		objChannel.sendMessage(String.format("%s %s", CommandStrings.getInstance().COIN_LANDED, stringdict[Random])).queue();
         return;
 	}
 

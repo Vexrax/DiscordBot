@@ -10,10 +10,10 @@ public class EndBotCommand implements Command
 	public boolean called(String[] args, MessageReceivedEvent e) {
 		if((utility.getUserRank(e.getAuthor().getId())) == Ranks.Admin)
 		{
-			e.getChannel().sendMessage("Admin of skynet " + e.getAuthor().getName() + " has ended the proccess.").queue();
+			e.getChannel().sendMessage(String.format("%s %s %s.", CommandStrings.getInstance().ADMIN_OF_SKYNET, e.getAuthor().getName(), CommandStrings.getInstance().ENDED_PROCCESS)).queue();
 			return true;
 		}
-		e.getChannel().sendMessage("This user is not a high enough rank to end me").queue();
+		e.getChannel().sendMessage(CommandStrings.getInstance().RANK_NOT_HIGH_ENOUGH_TO_END).queue();
 		return false;
 	}
 

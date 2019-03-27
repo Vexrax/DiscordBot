@@ -16,15 +16,15 @@ public class HelpCommand implements Command
     public void action(String[] args, MessageReceivedEvent e)
     {
         EmbedBuilder builder = new EmbedBuilder();
-        builder.setTitle("Commands");
-        builder.appendDescription("//song (play, get, clear, skip, banish)\n");
-        builder.appendDescription("//ping\n");
-        builder.appendDescription("//roledice\n");
-        builder.appendDescription("//flipcoin \n");
-        builder.appendDescription("//quote (add, remove, vote)\n");
-        builder.appendDescription("//summon\n");
-        builder.appendDescription("//pokemonbattle (newbattle, switch, move)\n");
-        builder.appendDescription("Example command '//song play warriors'");
+        builder.setTitle(CommandStrings.getInstance().COMMANDS_HELP);
+        builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_SONG));
+        builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_QUOTE));
+        builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_ROLEDICE));
+        builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_FLIPCOIN));
+        builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_POKEMONBATTLE));
+        builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_PING));
+        builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_SUMMON));
+        builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_EXAMPLE));
         objTextChannel.sendMessage(builder.build()).queue();
     }
     public String help()
