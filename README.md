@@ -12,14 +12,13 @@ RIOT:
 
 SPOTIFY:
 
-## Features: 
+### Commands: 
 
--Song playing 
-
--Pokemon Battle Simulation
-
--Role Dice and flip coin
-
--Quoting
-
--League of Legends current match details
+- `//Song` *Play, skip, clear* Used for playing songs
+- `//flipcoin` Flip a Coin
+- `//quote` *add, vote* Used for playing songs
+- `//RoleDice` Role A Dice
+- `//Ping` Check if bot is dead
+- `//wiki` returns a wiki of the search term (TODO)
+- `//lol bans` - Get the top 10 most common bans (TODO)
+- `//lol match` *region summoner-name* - Get the name, rank, Champion, winrate and total games for all players in a match (TODO)
