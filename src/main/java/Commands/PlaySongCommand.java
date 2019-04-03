@@ -23,7 +23,11 @@ public class PlaySongCommand implements Command
     private TextChannel objTextChannel;
     private Guild objGuild;
 	private MusicManager manager = new MusicManager();
-	private String[] valid_commands = {"play", "skip", "clear", "banish", "get"};
+	private String[] valid_commands = { CommandStrings.getInstance().COMMAND_SONG_PLAY,
+										CommandStrings.getInstance().COMMAND_SONG_SKIP,
+			 							CommandStrings.getInstance().COMMAND_SONG_CLEAR,
+										CommandStrings.getInstance().COMMAND_SONG_BANISH,
+										CommandStrings.getInstance().COMMAND_SONG_GET};
 
 
 	public PlaySongCommand(String YoutubeApiKey)
@@ -48,7 +52,7 @@ public class PlaySongCommand implements Command
 	public void action(String[] args, MessageReceivedEvent e) 
 	{
 		System.out.println(args[0]);
-		if(args[0].equals("play"))
+		if(args[0].equals(CommandStrings.getInstance().COMMAND_SONG_PLAY))
 		{			
 			if(!args[1].startsWith("https://www.youtube.com/watch?v="))
 			{
@@ -66,25 +70,25 @@ public class PlaySongCommand implements Command
 				play(args[1], e);
 			}
 		}
-		else if(args[0].equals("skip"))
+		else if(args[0].equals(CommandStrings.getInstance().COMMAND_SONG_SKIP))
 		{
 			skipSong(e);
 		}
-		else if(args[0].equals("clear"))
+		else if(args[0].equals(CommandStrings.getInstance().COMMAND_SONG_CLEAR))
 		{
 			clearPlaylist(e);
 		}
-		else if(args[0].equals("banish"))
+		else if(args[0].equals(CommandStrings.getInstance().COMMAND_SONG_BANISH))
 		{
 			banish(e);
 		}
-		else if(args[0].equals("get"))
+		else if(args[0].equals(CommandStrings.getInstance().COMMAND_SONG_GET))
 		{
-			if(args[1].equals("playlist"))
+			if(args[1].equals(CommandStrings.getInstance().COMMAND_SONG_PLAYLIST))
 			{
 				getPlaylist(e);
 			}
-			else if(args[1].equals("current"))
+			else if(args[1].equals(CommandStrings.getInstance().COMMAND_SONG_CURRENT))
 			{
 				getCurrentSong(e);
 			}
@@ -92,14 +96,7 @@ public class PlaySongCommand implements Command
 	}
 
 	public String help() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Song Help:\n");
-		builder.append("//song play (song)\t\t\t-> play a song or playlist\n");
-		builder.append("//song clear\t\t\t-> clear the queue\n");
-		builder.append("//song get  (current/playlist)\t\t\t-> get the current playing song or the playlist\n");
-		builder.append("//song banish\t\t\t-> make the bot leave your channel\n");
-		builder.append("//song skip\t\t\t-> skip the current song\n");
-		return builder.toString();
+		return CommandStrings.getInstance().COMMAND_SONG_HELP;
 	}
 
 	public void executed(boolean success, MessageReceivedEvent event) {
@@ -117,7 +114,7 @@ public class PlaySongCommand implements Command
 			VoiceChannel voicechannel = objGuild.getMember(objUser).getVoiceState().getChannel();
 			if(voicechannel == null)
 			{
-					objTextChannel.sendMessage("You must join a channel first").queue();
+					objTextChannel.sendMessage(CommandStrings.getInstance().COMMAND_SONG_TEXT_JOINCHANNEL).queue();
 			}
 			objGuild.getAudioManager().openAudioConnection(voicechannel);
 		}
@@ -127,7 +124,7 @@ public class PlaySongCommand implements Command
 	{
     	if(!objGuild.getAudioManager().isConnected() && !objGuild.getAudioManager().isAttemptingToConnect())
     	{
-    		objTextChannel.sendMessage("Player is not currently playing song.").queue();
+    		objTextChannel.sendMessage(CommandStrings.getInstance().COMMAND_SONG_TEXT_NOTPLAYING).queue();
     		return;
     	}
     	manager.getPlayer(objGuild).skipTrack();
@@ -135,7 +132,7 @@ public class PlaySongCommand implements Command
     	{
     		this.manager = new MusicManager();
 		}
-    	objTextChannel.sendMessage("Skipping current song").queue();
+    	objTextChannel.sendMessage(CommandStrings.getInstance().COMMAND_SONG_TEXT_SKIPPING).queue();
 	}
 	
 	public void clearPlaylist(MessageReceivedEvent e)
@@ -143,25 +140,25 @@ public class PlaySongCommand implements Command
     	MusicPlayer player = manager.getPlayer(objTextChannel.getGuild());
     	if(player.getListener().getTracks().isEmpty())
     	{
-    		objTextChannel.sendMessage("Your playlist is already empty.").queue();
+    		objTextChannel.sendMessage(CommandStrings.getInstance().COMMAND_SONG_TEXT_PLAYLISTEMPTY).queue();
     		return;
     	}
     	player.getListener().getTracks().clear();
     	manager.getPlayer(objGuild).skipTrack();
     	this.manager = new MusicManager();
-    	objTextChannel.sendMessage("Playlist cleared.").queue();
+    	objTextChannel.sendMessage(CommandStrings.getInstance().COMMAND_SONG_TEXT_CLEARPLAYLIST).queue();
     	
 	}
 	public void banish(MessageReceivedEvent e)
 	{
 		objGuild.getAudioManager().closeAudioConnection();
-		objTextChannel.sendMessage("Leaving the channel.").queue();
+		objTextChannel.sendMessage(CommandStrings.getInstance().COMMAND_SONG_TEXT_LEAVECHANNEL).queue();
 	}
 	public void getPlaylist(MessageReceivedEvent e)
 	{
 		MusicPlayer player = manager.getPlayer(objTextChannel.getGuild());
 		EmbedBuilder builder = new EmbedBuilder();
-		builder.appendDescription("Current Playlist:\n");
+		builder.appendDescription(CommandStrings.getInstance().COMMAND_SONG_TEXT_CURRENTPLAYLIST);
 		for (AudioTrack track : player.getListener().getTracks())
 		{
 			builder.appendDescription(track.getInfo().title + '\n');
@@ -176,7 +173,7 @@ public class PlaySongCommand implements Command
 	}
 	public void getCurrentSong(MessageReceivedEvent e)
 	{
-		objTextChannel.sendMessage("Current Song:\n").queue();
+		objTextChannel.sendMessage(CommandStrings.getInstance().COMMAND_SONG_TEXT_CURRENTSONG).queue();
 		objTextChannel.sendMessage(manager.getPlayer(objTextChannel.getGuild()).getAudioPlayer().getPlayingTrack().getInfo().title).queue();
 	}
 
