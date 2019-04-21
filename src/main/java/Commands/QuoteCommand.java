@@ -10,7 +10,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class QuoteCommand implements Command
 {
-	private String[] valid_commands = {"add", "remove", "vote"};
+	private ArrayList<String> valid_commands = new ArrayList<String>();
 	private final String HELP = "Usage: = ~//quote";
 	String quoteFilePath = "quoteFile.txt";
 	private Util Utility = new Util();
@@ -20,14 +20,19 @@ public class QuoteCommand implements Command
 	private int currentVotes = 0;
 	private List<String> votedList = new ArrayList<String>();
 
+	public QuoteCommand()
+	{
+		valid_commands.add("add");
+		valid_commands.add("remove");
+		valid_commands.add("vote");
+	}
+
 	public boolean called(String[] args, MessageReceivedEvent event) {
 		if (args.length == 0) {
 			return true;
 		}
-		if (args.length >= 1 && Arrays.asList(valid_commands).contains(args[0])) {
-			return true;
-		}
-		return false;
+		return  valid_commands.contains(args[0]);
+
 	}
 
 	public void action(String[] args, MessageReceivedEvent e)
@@ -37,24 +42,22 @@ public class QuoteCommand implements Command
 			sendQuote(e);
 			return;
 		}
-		if(args[0].equals(valid_commands[0])) //add
+		if(args[0].equals(valid_commands.get(0))) //add
 		{
 			String quote = ConvertArgListToSingleString(args, 1);
 			addQuote(e, quote);
 		}
-		if(args[0].equals(valid_commands[1]))
+		if(args[0].equals(valid_commands.get(1)))
 		{
 			String quote = ConvertArgListToSingleString(args, 1);
 			removeQuote(e,quote);
 		}
-		if(args[0].equals(valid_commands[2]))  //vote
+		if(args[0].equals(valid_commands.get(2)))  //vote
 		{
 			if(args.length == 2 && args[1].equals("force"))
 			{
-				Vote(e, true);
-				return;
+				Vote(e, args[1].equals("force"));
 			}
-			Vote(e, false);
 		}
 	}
 

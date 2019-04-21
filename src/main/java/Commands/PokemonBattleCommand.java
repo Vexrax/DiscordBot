@@ -14,7 +14,7 @@ public class PokemonBattleCommand implements Command
 {
 	private ArrayList<String> valid_commands;
 	BattleModel battle;
-	PokemonBattleCommand()
+	public PokemonBattleCommand()
 	{
 		valid_commands = new ArrayList<String>();
 		valid_commands.add("newbattle");
