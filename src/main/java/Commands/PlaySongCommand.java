@@ -1,7 +1,10 @@
 package Commands;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import Backend.Search;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -23,15 +26,15 @@ public class PlaySongCommand implements Command
     private TextChannel objTextChannel;
     private Guild objGuild;
 	private MusicManager manager = new MusicManager();
-	private String[] valid_commands = { CommandStrings.getInstance().COMMAND_SONG_PLAY,
-										CommandStrings.getInstance().COMMAND_SONG_SKIP,
-			 							CommandStrings.getInstance().COMMAND_SONG_CLEAR,
-										CommandStrings.getInstance().COMMAND_SONG_BANISH,
-										CommandStrings.getInstance().COMMAND_SONG_GET};
-
+	private ArrayList<String> valid_commands;
 
 	public PlaySongCommand(String YoutubeApiKey)
 	{
+		valid_commands = new ArrayList<String>();
+		valid_commands.add(CommandStrings.getInstance().COMMAND_SONG_PLAY);
+		valid_commands.add(CommandStrings.getInstance().COMMAND_SONG_CLEAR);
+		valid_commands.add(CommandStrings.getInstance().COMMAND_SONG_BANISH);
+		valid_commands.add(CommandStrings.getInstance().COMMAND_SONG_GET);
 		this.API_KEY = YoutubeApiKey;
 	}
 	public boolean called(String[] args, MessageReceivedEvent e) 
@@ -44,9 +47,8 @@ public class PlaySongCommand implements Command
 			objTextChannel.sendMessage(help()).queue();
 			return false;
 		}
-		if(Arrays.asList(valid_commands).contains(args[0]))
-			return true;
-		return false;
+		return valid_commands.contains(args[0]);
+
 	}
 
 	public void action(String[] args, MessageReceivedEvent e) 

@@ -8,9 +8,19 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import pokemon.BattleModel;
 
+import java.util.ArrayList;
+
 public class PokemonBattleCommand implements Command
 {
+	private ArrayList<String> valid_commands;
 	BattleModel battle;
+	PokemonBattleCommand()
+	{
+		valid_commands = new ArrayList<String>();
+		valid_commands.add("newbattle");
+		valid_commands.add("switch");
+		valid_commands.add("move");
+	}
 	public boolean called(String[] args, MessageReceivedEvent e) 
 	{
 		if(args.length == 0)
@@ -18,19 +28,7 @@ public class PokemonBattleCommand implements Command
 			return false;
 		}
 		System.out.println(args[0]);
-		if(args[0].equals("newbattle")) //make sure to check that theres a user in hte mentions
-		{
-			return true;
-		}
-		else if(args[0].equals("switch"))
-		{
-			return true;
-		}
-		else if(args[0].equals("move")) //check if mvoe number is valid (0-4)
-		{
-			return true;
-		}
-		return false;
+		return valid_commands.contains(args[0]);
 	}
 
 	public void action(String[] args, MessageReceivedEvent e) 

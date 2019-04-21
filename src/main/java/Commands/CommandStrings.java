@@ -48,7 +48,7 @@ public class CommandStrings
     public String COMMAND_SONG_TEXT_LEAVECHANNEL = "Leaving the channel.";
     public String COMMAND_SONG_TEXT_CURRENTPLAYLIST = "Current Playlist:\n";
     public String COMMAND_SONG_TEXT_CURRENTSONG = "Current Song:\n";
-    
+
 
 
 
