@@ -19,6 +19,7 @@ public class QuoteCommand implements Command
 	private int requiredVotes = 4;
 	private int currentVotes = 0;
 	private List<String> votedList = new ArrayList<String>();
+	private int voteTime = 120000;
 
 	public QuoteCommand()
 	{
@@ -205,7 +206,7 @@ public class QuoteCommand implements Command
 				resetVoting();
 				quoteBeingAddedOrRemoved = false;
 			}
-		}, 120000);
+		}, voteTime);
 	}
 
 
@@ -231,7 +232,7 @@ public class QuoteCommand implements Command
 				resetVoting();
 				quoteBeingAddedOrRemoved = false;
 			}
-		}, 120000);
+		}, voteTime);
 	}
 
 
