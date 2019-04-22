@@ -24,9 +24,7 @@ public class SummonerCommand implements Command
 	}
 
 	public boolean called(String[] args, MessageReceivedEvent e) {
-		if(args[0].length() > 0)
-			return true;
-		return false;
+		return args[0].length() > 0;
 	}
 
 	public void action(String[] args, MessageReceivedEvent e) 
