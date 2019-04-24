@@ -72,7 +72,6 @@ public class QuoteCommand implements Command
 	}
 
 	public String help() {
-		// TODO Auto-generated method stub
 		return HELP;
 	}
 
