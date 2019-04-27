@@ -41,8 +41,7 @@ public class SummonCommand implements Command
 	}
 
 	public String help() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Summon a bot to the channel";
 	}
 
 	public void executed(boolean success, MessageReceivedEvent e)
