@@ -12,6 +12,7 @@ import Backend.BotListener;
 import Backend.CommandParser;
 import Backend.Util;
 import Commands.*;
+import Commands.SongCommand.SongCommand;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -96,7 +97,7 @@ public class App
     {
         commands.put("ping", new PingCommand());
         commands.put("quote", new QuoteCommand());
-        commands.put("song", new PlaySongCommand(APIkeys.get("GOOGLE:")));
+        commands.put("song", new SongCommand(APIkeys.get("GOOGLE:")));
         commands.put("rolldice", new RollDiceCommand());
         commands.put("flipcoin", new FlipCoinCommand());
         commands.put("pokemonbattle", new PokemonBattleCommand());
