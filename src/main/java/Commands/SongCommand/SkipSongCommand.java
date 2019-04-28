@@ -5,19 +5,23 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class SkipSongCommand implements Command
 {
-    public boolean called(String[] args, MessageReceivedEvent e) {
+    public boolean called(String[] args, MessageReceivedEvent e)
+    {
         return true;
     }
 
-    public void action(String[] args, MessageReceivedEvent e) {
+    public void action(String[] args, MessageReceivedEvent e)
+    {
         MusicCommands.getInstance().skipSong(e);
     }
 
-    public String help() {
+    public String help()
+    {
         return null;
     }
 
-    public void executed(boolean success, MessageReceivedEvent e) {
+    public void executed(boolean success, MessageReceivedEvent e)
+    {
 
     }
 }

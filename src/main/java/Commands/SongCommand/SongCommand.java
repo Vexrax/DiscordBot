@@ -28,10 +28,10 @@ public class SongCommand implements Command
 			return false;
 		}
 		return commands.containsKey(args[0]);
-
 	}
 
-	public void action(String[] args, MessageReceivedEvent e) {
+	public void action(String[] args, MessageReceivedEvent e)
+	{
 		String[] cleanedArgs = CleanArgs(args);
 		boolean safe = commands.get(args[0]).called(cleanedArgs, e);
 		if(safe)
@@ -50,9 +50,9 @@ public class SongCommand implements Command
 		return CommandStrings.getInstance().COMMAND_SONG_HELP;
 	}
 
-	public void executed(boolean success, MessageReceivedEvent event) {
+	public void executed(boolean success, MessageReceivedEvent event)
+	{
 	}
-
 
 	private String[] CleanArgs(String[] args) {
 		String[] cleanedArgs = new String[args.length];

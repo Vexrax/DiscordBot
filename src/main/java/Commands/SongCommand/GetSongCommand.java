@@ -28,7 +28,8 @@ public class GetSongCommand implements Command
         return null;
     }
 
-    public void executed(boolean success, MessageReceivedEvent e) {
+    public void executed(boolean success, MessageReceivedEvent e)
+    {
 
     }
 }

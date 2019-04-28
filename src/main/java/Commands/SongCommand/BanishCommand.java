@@ -15,11 +15,13 @@ public class BanishCommand implements Command
         MusicCommands.getInstance().banish(e);
     }
 
-    public String help() {
+    public String help()
+    {
         return null;
     }
 
-    public void executed(boolean success, MessageReceivedEvent e) {
+    public void executed(boolean success, MessageReceivedEvent e)
+    {
 
     }
 }
