@@ -305,4 +305,9 @@ public class QuoteCommand implements Command
 			objChannel.sendMessage("An Error occured: " + exception.toString()).queue();
 		}
 	}
+
+	public void ListAllQuotes(MessageChannel objChannel)
+	{
+		//TODO, Stub for listing all the quotes
+	}
 }
