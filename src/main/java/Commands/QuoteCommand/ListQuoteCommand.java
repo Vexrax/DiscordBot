@@ -21,7 +21,20 @@ public class ListQuoteCommand implements Command {
 
     public void action(String[] args, MessageReceivedEvent e)
     {
-        try {
+        ListAllQuotes(e);
+    }
+    
+    public String help() {
+        return "You must be a Skynet Admin to use this command";
+    }
+
+    public void executed(boolean success, MessageReceivedEvent e) {
+
+    }
+
+    private void ListAllQuotes(MessageReceivedEvent e) {
+        try
+        {
             int numberoflines = util.getFileLineLength(quoteFilePath);
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setTitle("List Of Quotes");
@@ -38,14 +51,5 @@ public class ListQuoteCommand implements Command {
         {
             e.getChannel().sendMessage(exception.getMessage()).queue();
         }
-
-    }
-
-    public String help() {
-        return "You must be a Skynet Admin to use this command";
-    }
-
-    public void executed(boolean success, MessageReceivedEvent e) {
-
     }
 }
