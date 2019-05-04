@@ -10,7 +10,6 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class QuoteCommand implements Command
 {
-	private ArrayList<String> valid_commands = new ArrayList<String>();
 	private final String HELP = "Usage: = ~//quote";
 	public static String quoteFilePath = "quoteFile.txt";
 

@@ -11,8 +11,12 @@ public class Util
     String RankSheetPath = "Ranks.txt";
 
     public static String[] CleanArgs(String[] args) {
-        String[] cleanedArgs = new String[args.length-1];
+        if(args.length == 0)
+        {
+            return new String[0];
+        }
         ArrayList<String> tempArray = new ArrayList<String>();
+        String[] cleanedArgs = new String[args.length-1];
         int i = 0;
         for (String s : args)
         {
@@ -73,6 +77,7 @@ public class Util
         }
     }
 
+    //Single String Has Spaces
     public String ConvertArgListToSingleString(String[] args, int startindex) {
         StringBuilder builder = new StringBuilder();
         for(int i = startindex; i < args.length; i++)

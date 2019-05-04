@@ -1,12 +1,14 @@
 package Commands.SongCommand;
 
 import Backend.Search;
+import Backend.Util;
 import Commands.Command;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 public class PlaySongCommand implements Command
 {
     private String API_KEY;
+    Util util = new Util();
     public PlaySongCommand(String API)
     {
         this.API_KEY = API;
@@ -20,13 +22,8 @@ public class PlaySongCommand implements Command
     {
         if(!args[0].startsWith("https://www.youtube.com/watch?v="))
         {
-            StringBuilder builder = new StringBuilder();
-            for(int i = 0; i < args.length-1; i++)
-            {
-                builder.append(args[i] + " ");
-            }
             Search url = new Search();
-            String urlToPlay = "https://www.youtube.com/watch?v=" + url.searchToUrl(builder.toString() + "lyrics", this.API_KEY);
+            String urlToPlay = "https://www.youtube.com/watch?v=" + url.searchToUrl(util.ConvertArgListToSingleString(args, 0) + "lyrics", this.API_KEY);
             MusicCommands.getInstance().play(urlToPlay, e);
         }
         else
