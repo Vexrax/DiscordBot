@@ -3,11 +3,27 @@ package Backend;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Util
 {
     String RankSheetPath = "Ranks.txt";
+
+    public static String[] CleanArgs(String[] args) {
+        String[] cleanedArgs = new String[args.length-1];
+        ArrayList<String> tempArray = new ArrayList<String>();
+        int i = 0;
+        for (String s : args)
+        {
+            if(i != 0)
+            {
+                tempArray.add(s);
+            }
+            i++;
+        }
+        return tempArray.toArray(cleanedArgs);
+    }
 
     public Ranks getUserRank(String id)
     {
@@ -57,4 +73,12 @@ public class Util
         }
     }
 
+    public String ConvertArgListToSingleString(String[] args, int startindex) {
+        StringBuilder builder = new StringBuilder();
+        for(int i = startindex; i < args.length; i++)
+        {
+            builder.append(args[i] + " ");
+        }
+        return builder.toString();
+    }
 }

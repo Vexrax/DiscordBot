@@ -1,6 +1,7 @@
 package Commands.SongCommand;
 import java.util.HashMap;
 
+import Backend.Util;
 import Commands.Command;
 import Commands.CommandStrings;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -32,7 +33,7 @@ public class SongCommand implements Command
 
 	public void action(String[] args, MessageReceivedEvent e)
 	{
-		String[] cleanedArgs = CleanArgs(args);
+		String[] cleanedArgs = Util.CleanArgs(args);
 		boolean safe = commands.get(args[0]).called(cleanedArgs, e);
 		if(safe)
 		{
@@ -54,17 +55,4 @@ public class SongCommand implements Command
 	{
 	}
 
-	private String[] CleanArgs(String[] args) {
-		String[] cleanedArgs = new String[args.length];
-		int i = 0;
-		for (String s : args)
-		{
-			if(i != 0)
-			{
-				cleanedArgs[i-1]= s;
-			}
-			i++;
-		}
-		return cleanedArgs;
-	}
 }

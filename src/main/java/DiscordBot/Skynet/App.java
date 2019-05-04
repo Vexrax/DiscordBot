@@ -12,6 +12,7 @@ import Backend.BotListener;
 import Backend.CommandParser;
 import Backend.Util;
 import Commands.*;
+import Commands.QuoteCommand.QuoteCommand;
 import Commands.SongCommand.SongCommand;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
