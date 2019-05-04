@@ -23,7 +23,7 @@ public class ListQuoteCommand implements Command {
     {
         ListAllQuotes(e);
     }
-    
+
     public String help() {
         return "You must be a Skynet Admin to use this command";
     }
@@ -36,16 +36,14 @@ public class ListQuoteCommand implements Command {
         try
         {
             int numberoflines = util.getFileLineLength(quoteFilePath);
-            EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setTitle("List Of Quotes");
-            embedBuilder.setColor(Color.BLACK);
+            StringBuilder builder = new StringBuilder();
             BufferedReader textreaderforquotes = new BufferedReader(new FileReader(quoteFilePath));
             for(int i = 0; i < numberoflines; i++)
             {
-                embedBuilder.appendDescription(textreaderforquotes.readLine() + "\r\n");
+                builder.append(textreaderforquotes.readLine() + "\r\n");
             }
             textreaderforquotes.close();
-            e.getChannel().sendMessage(embedBuilder.build()).queue();;
+            e.getChannel().sendMessage(builder.toString()).queue();;
         }
         catch (Exception exception)
         {
