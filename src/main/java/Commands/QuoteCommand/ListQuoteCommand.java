@@ -40,6 +40,12 @@ public class ListQuoteCommand implements Command {
             BufferedReader textreaderforquotes = new BufferedReader(new FileReader(quoteFilePath));
             for(int i = 0; i < numberoflines; i++)
             {
+                //Discord only supports messages that are 2000 chars or less 
+                if(builder.length() >= 1900)
+                {
+                    e.getChannel().sendMessage(builder.toString()).queue();
+                    builder = new StringBuilder();
+                }
                 builder.append(textreaderforquotes.readLine() + "\r\n");
             }
             textreaderforquotes.close();
