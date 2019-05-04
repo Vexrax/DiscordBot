@@ -5,10 +5,7 @@ import Commands.Command;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -74,10 +71,13 @@ public class AddQuoteCommand implements Command
     {
         try
         {
-            Writer output;
-            output = new BufferedWriter(new FileWriter(quoteFilePath, true));
-            output.append("\r\n" + QuoteToBeAdded);
-            output.close();
+            int numberoflines = util.getFileLineLength(quoteFilePath);
+            String[] quotearray = new String[numberoflines];
+            BufferedReader textreaderforquotes = new BufferedReader(new FileReader(quoteFilePath));
+            for(int i = 0; i < numberoflines; i++)
+            {
+                quotearray[i] = textreaderforquotes.readLine();
+            }
         }
         catch (IOException e)
         {

@@ -29,6 +29,7 @@ public class QuoteCommand implements Command
 		commands.put("remove", new RemoveQuoteCommand());
 		commands.put("vote", new VoteQuoteCommand());
 		commands.put("", new SendQuoteCommand());
+		commands.put("list", new ListQuoteCommand());
 
 	}
 
