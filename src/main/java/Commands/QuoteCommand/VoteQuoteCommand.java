@@ -26,11 +26,7 @@ public class VoteQuoteCommand implements Command
             Vote(e, false);
             return;
         }
-        if(args[0].equalsIgnoreCase("force"))
-        {
-            Vote(e, true);
-
-        }
+        Vote(e, args[0].equalsIgnoreCase("force"));
     }
 
     public String help() {

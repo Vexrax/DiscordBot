@@ -1,6 +1,5 @@
 package Commands.QuoteCommand;
 
-import java.io.*;
 import java.util.*;
 
 import Backend.Util;
@@ -11,13 +10,13 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 public class QuoteCommand implements Command
 {
 	private final String HELP = "Usage: = ~//quote";
-	public static String quoteFilePath = "quoteFile.txt";
+	protected static String quoteFilePath = "quoteFile.txt";
 
 	public static HashMap<String, Command> commands = new HashMap<String, Command>();
 
 	protected static boolean quoteBeingAddedOrRemoved = false;
 	protected static int requiredVotes = 4;
-	protected static int currentVotes = 0;
+	protected  static int currentVotes = 0;
 	protected static int voteTime = 120000;
 
 	protected static List<String> votedList = new ArrayList<String>();

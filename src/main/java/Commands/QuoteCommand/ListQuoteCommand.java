@@ -3,10 +3,8 @@ package Commands.QuoteCommand;
 import Backend.Ranks;
 import Backend.Util;
 import Commands.Command;
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-import java.awt.*;
 import java.io.*;
 
 import static Commands.QuoteCommand.QuoteCommand.quoteFilePath;
@@ -40,7 +38,7 @@ public class ListQuoteCommand implements Command {
             BufferedReader textreaderforquotes = new BufferedReader(new FileReader(quoteFilePath));
             for(int i = 0; i < numberoflines; i++)
             {
-                //Discord only supports messages that are 2000 chars or less 
+                //Discord only supports messages that are 2000 chars or less
                 if(builder.length() >= 1900)
                 {
                     e.getChannel().sendMessage(builder.toString()).queue();
