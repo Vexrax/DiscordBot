@@ -101,7 +101,6 @@ public class App
         commands.put("song", new SongCommand(APIkeys.get("GOOGLE:")));
         commands.put("rolldice", new RollDiceCommand());
         commands.put("flipcoin", new FlipCoinCommand());
-        commands.put("pokemonbattle", new PokemonBattleCommand());
         commands.put("end", new EndBotCommand());
         commands.put("summoner", new SummonerCommand(APIkeys.get("RIOT:")));
         commands.put("summon", new SummonCommand());
