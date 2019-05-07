@@ -79,6 +79,11 @@ public class App
     
     public static void handleCommand(CommandParser.CommandContainer cmd)
     {
+    	if (serviceMode)
+    	{
+    		return;
+    	}
+
     	if(commands.containsKey(cmd.invoke))
     	{
     		boolean safe = commands.get(cmd.invoke).called(cmd.args, cmd.e);

@@ -21,7 +21,6 @@ public class HelpCommand implements Command
         builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_QUOTE));
         builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_ROLEDICE));
         builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_FLIPCOIN));
-        builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_POKEMONBATTLE));
         builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_PING));
         builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_SUMMON));
         builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_EXAMPLE));
