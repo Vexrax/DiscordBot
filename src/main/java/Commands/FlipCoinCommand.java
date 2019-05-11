@@ -18,7 +18,6 @@ public class FlipCoinCommand implements Command
 		String[] stringdict = {CommandStrings.getInstance().HEADS, CommandStrings.getInstance().TAILS};
     	int Random = (int)(Math.random()*2);
 		objChannel.sendMessage(String.format("%s %s", CommandStrings.getInstance().COIN_LANDED, stringdict[Random])).queue();
-        return;
 	}
 
 	public String help() {

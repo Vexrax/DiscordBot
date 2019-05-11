@@ -66,19 +66,11 @@ public class VoteQuoteCommand implements Command
             objChannel.sendMessage(e.getAuthor().getName() + " is forcing the vote to pass").queue();
             currentVotes += requiredVotes + 1;
             objChannel.sendMessage("Current Votes: " + currentVotes + " Required Votes: " + requiredVotes).queue();
-            return;
-        }
-        else if(util.getUserRank(e.getAuthor().getId()) == Ranks.Terminator)
-        {
-            currentVotes += 2;
-            SendVoteBeingAddedToTally(objChannel);
-            return;
         }
         else
         {
             currentVotes += 1;
             SendVoteBeingAddedToTally(objChannel);
-            return;
         }
     }
 
