@@ -12,8 +12,6 @@ import Backend.BotListener;
 import Backend.CommandParser;
 import Backend.Util;
 import Commands.*;
-import Commands.QuoteCommand.QuoteCommand;
-import Commands.SongCommand.SongCommand;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -26,34 +24,33 @@ public class App
 	private static final String API_KEY_PATH = "APIKEYS.txt";
 
 	public static final CommandParser parser = new CommandParser();
-	
-	public static HashMap<String, Command> commands = new HashMap<String, Command>();
-	public static HashMap<String, String> APIkeys = new HashMap<String, String>();
+
+	public static CommandFactory commandFactory;
 	public static boolean serviceMode = false;
 	public static Util util = new Util();
 	
     public static void main(String[] args) throws LoginException, IllegalArgumentException, RateLimitedException, InterruptedException
     {
-
     	try
 		{
-			getApiKeys(); //get the api keys
+			HashMap<String, String> APIkeys = getApiKeys(); //get the api keys
+			commandFactory = new CommandFactory(APIkeys);
 			JDA bot;
 			bot = new JDABuilder(AccountType.BOT)
 					.setToken(APIkeys.get("DISCORD:"))
 					.setGame(Game.of("Taking Over The World"))
 					.buildBlocking();
 			bot.addEventListener(new BotListener());
-			addCommands();//SET TOKEN
 		}
 		catch(Exception e)
 		{
 			System.out.println("exception caught: " + e);
 		}
     }
-	private static void getApiKeys()
+	private static HashMap<String, String> getApiKeys()
 	{
 		String path = API_KEY_PATH;
+		HashMap<String, String> APIkeys = new HashMap<String, String>();
 		try
 		{
 			BufferedReader textreader = new BufferedReader(new FileReader(path));
@@ -74,7 +71,7 @@ public class App
 		{
 			System.out.println("File Could Not Be Found");
 		}
-
+		return APIkeys;
 	}
     
     public static void handleCommand(CommandParser.CommandContainer cmd)
@@ -84,34 +81,20 @@ public class App
     		return;
     	}
 
-    	if(commands.containsKey(cmd.invoke))
+    	if(commandFactory.ContainsCommand(cmd.invoke))
     	{
-    		boolean safe = commands.get(cmd.invoke).called(cmd.args, cmd.e);
+    		boolean safe = commandFactory.GetCommand(cmd.invoke).called(cmd.args, cmd.e);
     		if(safe)
     		{
-    			commands.get(cmd.invoke).action(cmd.args, cmd.e);
-    			commands.get(cmd.invoke).executed(safe, cmd.e);
+				commandFactory.GetCommand(cmd.invoke).action(cmd.args, cmd.e);
+				commandFactory.GetCommand(cmd.invoke).executed(safe, cmd.e);
     		}
     		else 
     		{
-    			commands.get(cmd.invoke).executed(safe, cmd.e);
+				commandFactory.GetCommand(cmd.invoke).executed(safe, cmd.e);
     		}
     	}
     }
-
-    private static void addCommands()
-    {
-        commands.put("ping", new PingCommand());
-        commands.put("quote", new QuoteCommand());
-        commands.put("song", new SongCommand(APIkeys.get("GOOGLE:")));
-        commands.put("rolldice", new RollDiceCommand());
-        commands.put("flipcoin", new FlipCoinCommand());
-        commands.put("end", new EndBotCommand());
-        commands.put("summoner", new SummonerCommand(APIkeys.get("RIOT:")));
-        commands.put("summon", new SummonCommand());
-        commands.put("", new HelpCommand());
-		commands.put("help", new HelpCommand());
-	}
 }
 
 

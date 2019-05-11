@@ -1,0 +1,35 @@
+package Commands;
+
+import Commands.QuoteCommand.QuoteCommand;
+import Commands.SongCommand.SongCommand;
+
+import java.util.HashMap;
+
+public class CommandFactory
+{
+    public static HashMap<String, Command> commands = new HashMap<String, Command>();
+
+    public CommandFactory(HashMap<String, String> APIkeys)
+    {
+        commands.put("ping", new PingCommand());
+        commands.put("quote", new QuoteCommand());
+        commands.put("song", new SongCommand(APIkeys.get("GOOGLE:")));
+        commands.put("rolldice", new RollDiceCommand());
+        commands.put("flipcoin", new FlipCoinCommand());
+        commands.put("end", new EndBotCommand());
+        commands.put("summoner", new SummonerCommand(APIkeys.get("RIOT:")));
+        commands.put("summon", new SummonCommand());
+        commands.put("", new HelpCommand());
+        commands.put("help", new HelpCommand());
+    }
+
+    public Command GetCommand(String commandName)
+    {
+        return commands.get(commandName);
+    }
+
+    public Boolean ContainsCommand(String commandName)
+    {
+        return commands.containsKey(commandName);
+    }
+}
