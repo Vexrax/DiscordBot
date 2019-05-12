@@ -8,8 +8,9 @@ import java.util.HashMap;
 import javax.security.auth.login.LoginException;
 
 
-import Backend.BotListener;
+import Backend.Listeners.CommandListener;
 import Backend.CommandParser;
+import Backend.Listeners.WordListener;
 import Backend.Util;
 import Commands.*;
 import net.dv8tion.jda.core.AccountType;
@@ -40,7 +41,8 @@ public class App
 					.setToken(APIkeys.get("DISCORD:"))
 					.setGame(Game.of("Taking Over The World"))
 					.buildBlocking();
-			bot.addEventListener(new BotListener());
+			bot.addEventListener(new CommandListener());
+			bot.addEventListener(new WordListener());
 		}
 		catch(Exception e)
 		{
