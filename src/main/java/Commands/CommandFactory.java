@@ -21,6 +21,8 @@ public class CommandFactory
         commands.put("summon", new SummonCommand());
         commands.put("", new HelpCommand());
         commands.put("help", new HelpCommand());
+        commands.put("poll", new PollCommand());
+
     }
 
     public Command GetCommand(String commandName)
