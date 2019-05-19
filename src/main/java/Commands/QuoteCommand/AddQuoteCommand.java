@@ -71,13 +71,10 @@ public class AddQuoteCommand implements Command
     {
         try
         {
-            int numberoflines = util.getFileLineLength(quoteFilePath);
-            String[] quotearray = new String[numberoflines];
-            BufferedReader textreaderforquotes = new BufferedReader(new FileReader(quoteFilePath));
-            for(int i = 0; i < numberoflines; i++)
-            {
-                quotearray[i] = textreaderforquotes.readLine();
-            }
+            Writer output;
+            output = new BufferedWriter(new FileWriter(quoteFilePath, true));
+            output.append("\r\n" + QuoteToBeAdded);
+            output.close();
         }
         catch (IOException e)
         {
