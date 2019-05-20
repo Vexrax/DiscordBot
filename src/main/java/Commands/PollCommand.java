@@ -1,13 +1,9 @@
 package Commands;
 
-import com.sun.prism.paint.Color;
 import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
-import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,7 +14,7 @@ public class PollCommand implements Command
 
     public boolean called(String[] args, MessageReceivedEvent e)
     {
-        return args.length >= 2;
+        return args.length >= 2 && args.length <= 9;
     }
 
     public void action(String[] args, MessageReceivedEvent e)
@@ -29,7 +25,7 @@ public class PollCommand implements Command
         }
         pollStarted = true;
         e.getTextChannel().sendMessage("A poll has been started by "  + e.getAuthor().getName() + ". Use the reactions to vote on your choice.").queue();
-        SetupPollTimer(e);
+        SetupPollTimer(args, e);
         SendPollMessage(args, e);
     }
 
@@ -43,16 +39,17 @@ public class PollCommand implements Command
         {
             embededMessageBuilder.appendDescription(i+1 + ". " + polloption + "\n");
             i++;
+
         }
         objTextChannel.sendMessage(embededMessageBuilder.build()).queue();
     }
 
-    private void SetupPollTimer(final MessageReceivedEvent e) {
+    private void SetupPollTimer(String[] args, final MessageReceivedEvent e) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run()
             {
-                CalculatePollWinners(e);
+                CalculatePollWinners(args, e);
                 pollStarted = false;
             }}, voteTime);
     }
@@ -76,8 +73,9 @@ public class PollCommand implements Command
         return pollStarted;
     }
 
-    private void  CalculatePollWinners(MessageReceivedEvent e)
+    private void  CalculatePollWinners(String[] args, MessageReceivedEvent e)
     {
-        e.getTextChannel().sendMessage(String.format("The Option '%s' Won the poll"));
+
+        e.getTextChannel().sendMessage(String.format("The Option '%s' Won the poll", "Vexrax")).queue();
     }
 }
