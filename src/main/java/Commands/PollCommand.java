@@ -44,7 +44,7 @@ public class PollCommand implements Command
         objTextChannel.sendMessage(embededMessageBuilder.build()).queue();
     }
 
-    private void SetupPollTimer(String[] args, final MessageReceivedEvent e) {
+    private void SetupPollTimer(final String[] args, final MessageReceivedEvent e) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run()
