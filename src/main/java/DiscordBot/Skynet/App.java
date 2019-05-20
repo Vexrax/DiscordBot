@@ -10,6 +10,7 @@ import javax.security.auth.login.LoginException;
 
 import Backend.Listeners.CommandListener;
 import Backend.CommandParser;
+import Backend.Listeners.PollListener;
 import Backend.Listeners.WordListener;
 import Backend.Util;
 import Commands.*;
@@ -43,6 +44,8 @@ public class App
 					.buildBlocking();
 			bot.addEventListener(new CommandListener());
 			bot.addEventListener(new WordListener());
+			bot.addEventListener(new PollListener());
+
 		}
 		catch(Exception e)
 		{
