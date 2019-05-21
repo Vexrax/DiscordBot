@@ -18,6 +18,14 @@ public class PollCommand implements Command
 
     public boolean called(String[] args, MessageReceivedEvent e)
     {
+        if(args.length < 2)
+        {
+            e.getTextChannel().sendMessage("You have too few options!").queue();
+        }
+        if(args.length >= 9)
+        {
+            e.getTextChannel().sendMessage("You cannot use more than 9 options!").queue();
+        }
         return args.length >= 2 && args.length <= 9;
     }
 
