@@ -13,7 +13,7 @@ import java.util.TimerTask;
 public class PollCommand implements Command
 {
     boolean pollStarted = false;
-    protected static int voteTime = 10000;
+    protected static int voteTime = 120000;
     private Message CurrentPollMessage;
 
     public boolean called(String[] args, MessageReceivedEvent e)
