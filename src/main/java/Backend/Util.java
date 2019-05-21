@@ -5,10 +5,37 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Util
 {
     String RankSheetPath = "Ranks.txt";
+    private HashMap<Integer,  String> IntToUnicodeMap = new HashMap<Integer, String >();
+    private HashMap<String, Integer> UnicodeToIntMap = new HashMap<String, Integer>();
+
+
+    public Util()
+    {
+        IntToUnicodeMap.put(1, "1⃣");
+        IntToUnicodeMap.put(2, "2⃣");
+        IntToUnicodeMap.put(3, "3⃣");
+        IntToUnicodeMap.put(4, "4⃣");
+        IntToUnicodeMap.put(5, "5⃣");
+        IntToUnicodeMap.put(6, "6⃣");
+        IntToUnicodeMap.put(7, "7⃣");
+        IntToUnicodeMap.put(8, "8⃣");
+        IntToUnicodeMap.put(9, "9⃣");
+
+        UnicodeToIntMap.put("1⃣", 1);
+        UnicodeToIntMap.put("2⃣", 2);
+        UnicodeToIntMap.put("3⃣", 3);
+        UnicodeToIntMap.put("4⃣", 4);
+        UnicodeToIntMap.put("5⃣", 5);
+        UnicodeToIntMap.put("6⃣", 6);
+        UnicodeToIntMap.put("7⃣", 7);
+        UnicodeToIntMap.put("8⃣", 8);
+        UnicodeToIntMap.put("9⃣", 9);
+    }
 
     public static String[] CleanArgs(String[] args) {
         if(args.length == 0)
@@ -85,5 +112,21 @@ public class Util
             builder.append(args[i] + " ");
         }
         return builder.toString();
+    }
+
+    public String ConvertIntegerToUnicodePollString(int number)
+    {
+        return IntToUnicodeMap.get(number);
+    }
+
+    public int ConvertUnicodeStringToInt(String unicodePoll)
+    {
+        return UnicodeToIntMap.get(unicodePoll);
+    }
+
+    //Checks if the unicode is a valid 1-9 emoji
+    public boolean IsStringValidUnicodeEmoji(String string)
+    {
+        return UnicodeToIntMap.containsKey(string);
     }
 }

@@ -1,9 +1,11 @@
 package Commands;
 
+import Backend.Listeners.PollListener;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -73,9 +75,36 @@ public class PollCommand implements Command
         return pollStarted;
     }
 
-    private void  CalculatePollWinners(String[] args, MessageReceivedEvent e)
-    {
+    private void  CalculatePollWinners(String[] args, MessageReceivedEvent e) {
+        int[] votes = PollListener.GetListOfVotes();
+        ArrayList<Integer> winners = new ArrayList<Integer>();
+        int winningValue = 0;
+        for (int i = 0; i < votes.length; i++) {
+            if (votes[i] > winningValue) {
+                winners = new ArrayList<Integer>();
+                winningValue = votes[i];
+                winners.add(i);
+            }
+            else if(votes[i] == winningValue)
+            {
+                winners.add(i);
+            }
+        }
 
-        e.getTextChannel().sendMessage(String.format("The Option '%s' Won the poll", "Vexrax")).queue();
+        if (winners.size() > 1)
+        {
+            StringBuilder TiedStringBuilder = new StringBuilder();
+            TiedStringBuilder.append("There was a Tie Between Options:\n");
+            for(int winnerIndex : winners)
+            {
+                TiedStringBuilder.append(args[winnerIndex] + "\n");
+            }
+            e.getTextChannel().sendMessage(TiedStringBuilder.toString()).queue();
+            PollListener.ClearVotes();
+            return;
+        }
+
+        e.getTextChannel().sendMessage(String.format("The Option '%s' Won the poll", args[winners.get(0)])).queue();
+        PollListener.ClearVotes();
     }
 }
