@@ -44,12 +44,11 @@ public class PollListener extends ListenerAdapter
         }
     }
 
-    //TODO: Make it so that you can only vote if its an active POLL;
     private boolean MessageIsAPoll(Message message)
     {
         if(message.getEmbeds().size() > 0)
         {
-            return message.getAuthor().isBot() && message.getEmbeds().get(0).getTitle().equals("Poll");
+            return message.getAuthor().isBot() && message.getEmbeds().get(0).getTitle().equals("[Poll Active]");
         }
         return false;
     }

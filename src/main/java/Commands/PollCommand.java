@@ -2,6 +2,7 @@ package Commands;
 
 import Backend.Listeners.PollListener;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
@@ -12,7 +13,8 @@ import java.util.TimerTask;
 public class PollCommand implements Command
 {
     boolean pollStarted = false;
-    protected static int voteTime = 120000;
+    protected static int voteTime = 10000;
+    private Message CurrentPollMessage;
 
     public boolean called(String[] args, MessageReceivedEvent e)
     {
@@ -34,8 +36,13 @@ public class PollCommand implements Command
     private void SendPollMessage(String[] args, MessageReceivedEvent e)
     {
         TextChannel objTextChannel = e.getTextChannel();
+        EmbedBuilder embededMessageBuilder = getDefaultPollEmbedBuilder(args);
+        CurrentPollMessage = objTextChannel.sendMessage(embededMessageBuilder.build()).complete();
+    }
+
+    private EmbedBuilder getDefaultPollEmbedBuilder(String[] args) {
         EmbedBuilder embededMessageBuilder = new EmbedBuilder();
-        embededMessageBuilder.setTitle("Poll");
+        embededMessageBuilder.setTitle("[Poll Active]");
         int i =  0;
         for(String polloption : args)
         {
@@ -43,7 +50,7 @@ public class PollCommand implements Command
             i++;
 
         }
-        objTextChannel.sendMessage(embededMessageBuilder.build()).queue();
+        return embededMessageBuilder;
     }
 
     private void SetupPollTimer(final String[] args, final MessageReceivedEvent e) {
@@ -52,6 +59,7 @@ public class PollCommand implements Command
             public void run()
             {
                 CalculatePollWinners(args, e);
+                SetPollAsInactive(args);
                 pollStarted = false;
             }}, voteTime);
     }
@@ -64,6 +72,13 @@ public class PollCommand implements Command
     public void executed(boolean success, MessageReceivedEvent e)
     {
 
+    }
+
+    private void SetPollAsInactive(String[] args)
+    {
+        EmbedBuilder embedBuilder = getDefaultPollEmbedBuilder(args);
+        embedBuilder.setTitle("[Poll Finished]");
+        CurrentPollMessage.editMessage(embedBuilder.build()).queue();
     }
 
     private boolean isPollInProgress(MessageReceivedEvent e)
