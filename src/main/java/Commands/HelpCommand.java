@@ -23,6 +23,7 @@ public class HelpCommand implements Command
         builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_FLIPCOIN));
         builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_PING));
         builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_SUMMON));
+        builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_POLL_EXAMPLE));
         builder.appendDescription(String.format("%s \n", CommandStrings.getInstance().COMMAND_HELP_EXAMPLE));
         objTextChannel.sendMessage(builder.build()).queue();
     }

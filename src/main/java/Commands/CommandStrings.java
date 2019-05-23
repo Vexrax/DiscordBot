@@ -28,8 +28,9 @@ public class CommandStrings
     public String COMMAND_HELP_FLIPCOIN = "//flipcoin";
     public String COMMAND_HELP_QUOTE = "//quote (add, remove, vote)";
     public String COMMAND_HELP_SUMMON = "//summon";
-    public String COMMAND_HELP_POKEMONBATTLE = "//pokemonbattle (newbattle, switch, move)";
+    public String COMMAND_POLL_EXAMPLE = "//Poll (Option A | Option B | Option C)";
     public String COMMAND_HELP_EXAMPLE = "Example command '//song play warriors'";
+
 
     //SONG COMMAND
     public String COMMAND_SONG_PLAY = "play";

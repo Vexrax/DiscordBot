@@ -18,15 +18,19 @@ public class PollCommand implements Command
 
     public boolean called(String[] args, MessageReceivedEvent e)
     {
-        if(args.length < 2)
+        int optionsCount = 0;
+        for(String s : args)
         {
-            e.getTextChannel().sendMessage("You have too few options!").queue();
+            if(s.contains("|"))
+            {
+                optionsCount += 1;
+            }
         }
-        if(args.length >= 9)
+        if(!(optionsCount >= 1 && args.length >= 3))
         {
-            e.getTextChannel().sendMessage("You cannot use more than 9 options!").queue();
+            e.getTextChannel().sendMessage("Invalid input. Example //poll Option A | Option B | Option C").queue();
         }
-        return args.length >= 2 && args.length <= 9;
+        return optionsCount >= 1 && args.length >= 3;
     }
 
     public void action(String[] args, MessageReceivedEvent e)
@@ -37,8 +41,19 @@ public class PollCommand implements Command
         }
         pollStarted = true;
         e.getTextChannel().sendMessage("A poll has been started by "  + e.getAuthor().getName() + ". Use the reactions to vote on your choice.").queue();
-        SetupPollTimer(args, e);
-        SendPollMessage(args, e);
+        String[] pollOptions = getPollOptions(args);
+        SetupPollTimer(pollOptions, e);
+        SendPollMessage(pollOptions, e);
+    }
+
+    public String help()
+    {
+        return "Please include atleast two options seperated by ' | ' Example Usage //Poll Option A | Option B | Option C";
+    }
+
+    public void executed(boolean success, MessageReceivedEvent e)
+    {
+
     }
 
     private void SendPollMessage(String[] args, MessageReceivedEvent e)
@@ -61,6 +76,24 @@ public class PollCommand implements Command
         return embededMessageBuilder;
     }
 
+    private String[] getPollOptions(String[] args)
+    {
+        ArrayList<String> returningargs = new ArrayList<String>();
+        StringBuilder currentString = new StringBuilder();
+        for(String partialarg : args)
+        {
+            if(partialarg.endsWith("|"))
+            {
+                returningargs.add(currentString.toString());
+                currentString = new StringBuilder();
+                continue;
+            }
+            currentString.append(partialarg + " ");
+        }
+        returningargs.add(currentString.toString());
+        return returningargs.toArray(new String[returningargs.size()]);
+    }
+
     private void SetupPollTimer(final String[] args, final MessageReceivedEvent e) {
         new Timer().schedule(new TimerTask() {
             @Override
@@ -70,16 +103,6 @@ public class PollCommand implements Command
                 SetPollAsInactive(args);
                 pollStarted = false;
             }}, voteTime);
-    }
-
-    public String help()
-    {
-        return null;
-    }
-
-    public void executed(boolean success, MessageReceivedEvent e)
-    {
-
     }
 
     private void SetPollAsInactive(String[] args)
@@ -98,7 +121,8 @@ public class PollCommand implements Command
         return pollStarted;
     }
 
-    private void  CalculatePollWinners(String[] args, MessageReceivedEvent e) {
+    private void  CalculatePollWinners(String[] args, MessageReceivedEvent e)
+    {
         int[] votes = PollListener.GetListOfVotes();
         ArrayList<Integer> winners = new ArrayList<Integer>();
         int winningValue = 0;
