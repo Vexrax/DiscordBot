@@ -12,8 +12,8 @@ import java.util.TimerTask;
 
 public class PollCommand implements Command
 {
-    boolean pollStarted = false;
-    protected static int voteTime = 120000;
+    private boolean pollStarted = false;
+    private static int voteTime = 120000;
     private Message CurrentPollMessage;
 
     public boolean called(String[] args, MessageReceivedEvent e)
@@ -124,20 +124,7 @@ public class PollCommand implements Command
     private void  CalculatePollWinners(String[] args, MessageReceivedEvent e)
     {
         int[] votes = PollListener.GetListOfVotes();
-        ArrayList<Integer> winners = new ArrayList<Integer>();
-        int winningValue = 0;
-        for (int i = 0; i < votes.length; i++) {
-            if (votes[i] > winningValue) {
-                winners = new ArrayList<Integer>();
-                winningValue = votes[i];
-                winners.add(i);
-            }
-            else if(votes[i] == winningValue)
-            {
-                winners.add(i);
-            }
-        }
-
+        ArrayList<Integer> winners = TallyVotes(votes);
         if (winners.size() > 1)
         {
             StringBuilder TiedStringBuilder = new StringBuilder();
@@ -153,5 +140,25 @@ public class PollCommand implements Command
 
         e.getTextChannel().sendMessage(String.format("The Option '%s' Won the poll", args[winners.get(0)])).queue();
         PollListener.ClearVotes();
+    }
+
+    private ArrayList<Integer> TallyVotes(int[] votes)
+    {
+        ArrayList<Integer> winners = new ArrayList<Integer>();
+        int winningValue = 0;
+        for (int i = 0; i < votes.length; i++)
+        {
+            if (votes[i] > winningValue)
+            {
+                winners = new ArrayList<Integer>();
+                winningValue = votes[i];
+                winners.add(i);
+            }
+            else if(votes[i] == winningValue)
+            {
+                winners.add(i);
+            }
+        }
+        return winners;
     }
 }
