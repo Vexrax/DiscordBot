@@ -94,8 +94,10 @@ public class PollCommand implements Command
         return returningargs.toArray(new String[returningargs.size()]);
     }
 
-    private void SetupPollTimer(final String[] args, final MessageReceivedEvent e) {
-        new Timer().schedule(new TimerTask() {
+    private void SetupPollTimer(final String[] args, final MessageReceivedEvent e)
+    {
+        new Timer().schedule(new TimerTask()
+        {
             @Override
             public void run()
             {
@@ -137,7 +139,6 @@ public class PollCommand implements Command
             PollListener.ClearVotes();
             return;
         }
-
         e.getTextChannel().sendMessage(String.format("The Option '%s' Won the poll", args[winners.get(0)])).queue();
         PollListener.ClearVotes();
     }
