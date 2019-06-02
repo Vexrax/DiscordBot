@@ -44,7 +44,7 @@ public class RemoveQuoteCommand implements Command
             objChannel.sendMessage("Quote not found in quote file, quote must be formatted exactly how it appears in the file.").queue();
             return;
         }
-        SetUpVoteForQuoteBeingRemoved(quoteToRemove, objChannel);
+        setUpVoteForQuoteBeingRemoved(quoteToRemove, objChannel);
     }
 
     private boolean isQuoteInFile(String quoteToRemove)
@@ -70,7 +70,7 @@ public class RemoveQuoteCommand implements Command
         return false;
     }
 
-    private void SetUpVoteForQuoteBeingRemoved(final String QuoteToBeRemoved, final MessageChannel objChannel)
+    private void setUpVoteForQuoteBeingRemoved(final String QuoteToBeRemoved, final MessageChannel objChannel)
     {
         quoteBeingAddedOrRemoved = true;
         objChannel.sendMessage("A vote to REMOVE the quote:\n " +

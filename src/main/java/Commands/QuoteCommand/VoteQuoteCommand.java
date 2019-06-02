@@ -70,11 +70,11 @@ public class VoteQuoteCommand implements Command
         else
         {
             currentVotes += 1;
-            SendVoteBeingAddedToTally(objChannel);
+            sendVoteBeingAddedToTally(objChannel);
         }
     }
 
-    private void SendVoteBeingAddedToTally(MessageChannel objChannel)
+    private void sendVoteBeingAddedToTally(MessageChannel objChannel)
     {
         objChannel.sendMessage("Your vote has been added").queue();
         objChannel.sendMessage("Current Votes: " + currentVotes + " Required Votes: " + requiredVotes).queue();

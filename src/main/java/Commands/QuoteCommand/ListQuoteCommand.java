@@ -19,7 +19,7 @@ public class ListQuoteCommand implements Command {
 
     public void action(String[] args, MessageReceivedEvent e)
     {
-        ListAllQuotes(e);
+        listAllQuotes(e);
     }
 
     public String help() {
@@ -30,7 +30,7 @@ public class ListQuoteCommand implements Command {
 
     }
 
-    private void ListAllQuotes(MessageReceivedEvent e) {
+    private void listAllQuotes(MessageReceivedEvent e) {
         try
         {
             int numberoflines = util.getFileLineLength(quoteFilePath);

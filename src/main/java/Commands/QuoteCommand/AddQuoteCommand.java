@@ -39,10 +39,10 @@ public class AddQuoteCommand implements Command
     {
         final MessageChannel objChannel = e.getChannel();
         if (isVoteInProgress(objChannel)) return;
-        SetUpVoteForQuoteBeingAdded(QuoteToBeAdded, objChannel);
+        setUpVoteForQuoteBeingAdded(QuoteToBeAdded, objChannel);
     }
 
-    private void SetUpVoteForQuoteBeingAdded(final String QuoteToBeAdded, final MessageChannel objChannel)
+    private void setUpVoteForQuoteBeingAdded(final String QuoteToBeAdded, final MessageChannel objChannel)
     {
         quoteBeingAddedOrRemoved = true;
         objChannel.sendMessage("A vote for the quote:\n " +
