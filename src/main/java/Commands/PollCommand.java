@@ -125,7 +125,7 @@ public class PollCommand implements Command
 
     private void  CalculatePollWinners(String[] args, MessageReceivedEvent e)
     {
-        int[] votes = PollListener.GetListOfVotes();
+        int[] votes = PollListener.getListOfVotes();
         ArrayList<Integer> winners = TallyVotes(votes);
         if (winners.size() > 1)
         {
@@ -136,11 +136,11 @@ public class PollCommand implements Command
                 TiedStringBuilder.append(args[winnerIndex] + "\n");
             }
             e.getTextChannel().sendMessage(TiedStringBuilder.toString()).queue();
-            PollListener.ClearVotes();
+            PollListener.clearVotes();
             return;
         }
         e.getTextChannel().sendMessage(String.format("The Option '%s' Won the poll", args[winners.get(0)])).queue();
-        PollListener.ClearVotes();
+        PollListener.clearVotes();
     }
 
     private ArrayList<Integer> TallyVotes(int[] votes)

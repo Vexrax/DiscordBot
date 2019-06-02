@@ -22,7 +22,7 @@ public class AddQuoteCommand implements Command
 
     public void action(String[] args, MessageReceivedEvent e)
     {
-        addQuote(e, util.ConvertArgListToSingleString(args, 0));
+        addQuote(e, util.convertArgListToSingleString(args, 0));
     }
 
     public String help()

@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class Util
 {
-    String RankSheetPath = "Ranks.txt";
+    private String RankSheetPath = "Ranks.txt";
     private HashMap<Integer,  String> IntToUnicodeMap = new HashMap<Integer, String >();
     private HashMap<String, Integer> UnicodeToIntMap = new HashMap<String, Integer>();
 
@@ -37,7 +37,7 @@ public class Util
         UnicodeToIntMap.put("9⃣", 9);
     }
 
-    public static String[] CleanArgs(String[] args) {
+    public static String[] cleanArgs(String[] args) {
         if(args.length == 0)
         {
             return new String[0];
@@ -105,7 +105,7 @@ public class Util
     }
 
     //Single String Has Spaces
-    public String ConvertArgListToSingleString(String[] args, int startindex) {
+    public String convertArgListToSingleString(String[] args, int startindex) {
         StringBuilder builder = new StringBuilder();
         for(int i = startindex; i < args.length; i++)
         {
@@ -114,18 +114,18 @@ public class Util
         return builder.toString();
     }
 
-    public String ConvertIntegerToUnicodePollString(int number)
+    public String convertIntegerToUnicodePollString(int number)
     {
         return IntToUnicodeMap.get(number);
     }
 
-    public int ConvertUnicodeStringToInt(String unicodePoll)
+    public int convertUnicodeStringToInt(String unicodePoll)
     {
         return UnicodeToIntMap.get(unicodePoll);
     }
 
     //Checks if the unicode is a valid 1-9 emoji
-    public boolean IsStringValidUnicodeEmoji(String string)
+    public boolean isStringValidUnicodeEmoji(String string)
     {
         return UnicodeToIntMap.containsKey(string);
     }

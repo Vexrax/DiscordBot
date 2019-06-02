@@ -9,7 +9,7 @@ public class WordListener extends ListenerAdapter
     @Override
     public void onMessageReceived(MessageReceivedEvent e)
     {
-        ParseMessage(e.getMessage().getContent());
+        parseMessage(e.getMessage().getContent());
     }
 
     @Override
@@ -18,16 +18,16 @@ public class WordListener extends ListenerAdapter
 
     }
 
-    public void ParseMessage(String message)
+    public void parseMessage(String message)
     {
         String[] arrOfWords = message.split(" ");
         for(String word : arrOfWords)
         {
-            AddWordToDataBase(word);
+            addWordToDataBase(word);
         }
     }
 
-    public void AddWordToDataBase(String word)
+    public void addWordToDataBase(String word)
     {
 
     }

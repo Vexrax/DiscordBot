@@ -86,17 +86,17 @@ public class App
     		return;
     	}
 
-    	if(commandFactory.ContainsCommand(cmd.invoke))
+    	if(commandFactory.containsCommand(cmd.invoke))
     	{
-    		boolean safe = commandFactory.GetCommand(cmd.invoke).called(cmd.args, cmd.e);
+    		boolean safe = commandFactory.getCommand(cmd.invoke).called(cmd.args, cmd.e);
     		if(safe)
     		{
-				commandFactory.GetCommand(cmd.invoke).action(cmd.args, cmd.e);
-				commandFactory.GetCommand(cmd.invoke).executed(safe, cmd.e);
+				commandFactory.getCommand(cmd.invoke).action(cmd.args, cmd.e);
+				commandFactory.getCommand(cmd.invoke).executed(safe, cmd.e);
     		}
     		else 
     		{
-				commandFactory.GetCommand(cmd.invoke).executed(safe, cmd.e);
+				commandFactory.getCommand(cmd.invoke).executed(safe, cmd.e);
     		}
     	}
     }

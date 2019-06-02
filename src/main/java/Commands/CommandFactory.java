@@ -25,12 +25,12 @@ public class CommandFactory
 
     }
 
-    public Command GetCommand(String commandName)
+    public Command getCommand(String commandName)
     {
         return commands.get(commandName);
     }
 
-    public Boolean ContainsCommand(String commandName)
+    public Boolean containsCommand(String commandName)
     {
         return commands.containsKey(commandName);
     }

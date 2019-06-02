@@ -50,7 +50,7 @@ public class QuoteCommand implements Command
 		{
 			command = "";
 		}
-		String[] cleanedArgs = Util.CleanArgs(args);
+		String[] cleanedArgs = Util.cleanArgs(args);
 		boolean safe = commands.get(command).called(cleanedArgs, e);
 		if(safe)
 		{

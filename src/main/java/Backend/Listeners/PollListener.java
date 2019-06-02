@@ -20,7 +20,7 @@ public class PollListener extends ListenerAdapter
     {
         if(MessageIsAPoll(event.getMessage()))
         {
-            AddReactionOptions(event.getMessage().getEmbeds().get(0), event.getMessage());
+            addReactionOptions(event.getMessage().getEmbeds().get(0), event.getMessage());
         }
     }
 
@@ -28,9 +28,9 @@ public class PollListener extends ListenerAdapter
     public void onMessageReactionAdd(MessageReactionAddEvent event)
     {
         Message message = event.getChannel().getMessageById(event.getMessageId()).complete();
-        if(MessageIsAPoll(message) && util.IsStringValidUnicodeEmoji(event.getReaction().getEmote().getName()))
+        if(MessageIsAPoll(message) && util.isStringValidUnicodeEmoji(event.getReaction().getEmote().getName()))
         {
-            votes[util.ConvertUnicodeStringToInt(event.getReaction().getEmote().getName())-1] += 1;
+            votes[util.convertUnicodeStringToInt(event.getReaction().getEmote().getName())-1] += 1;
         }
     }
 
@@ -38,9 +38,9 @@ public class PollListener extends ListenerAdapter
     public void onMessageReactionRemove(MessageReactionRemoveEvent event)
     {
         Message message = event.getChannel().getMessageById(event.getMessageId()).complete();
-        if(MessageIsAPoll(message) && util.IsStringValidUnicodeEmoji(event.getReaction().getEmote().getName()))
+        if(MessageIsAPoll(message) && util.isStringValidUnicodeEmoji(event.getReaction().getEmote().getName()))
         {
-            votes[util.ConvertUnicodeStringToInt(event.getReaction().getEmote().getName())-1] -= 1;
+            votes[util.convertUnicodeStringToInt(event.getReaction().getEmote().getName())-1] -= 1;
         }
     }
 
@@ -53,21 +53,21 @@ public class PollListener extends ListenerAdapter
         return false;
     }
 
-    private void AddReactionOptions(MessageEmbed messageEmbed, Message message)
+    private void addReactionOptions(MessageEmbed messageEmbed, Message message)
     {
         String[] args = messageEmbed.getDescription().split("\n");
         for(int i = 0; i < args.length; i++)
         {
-            message.addReaction(util.ConvertIntegerToUnicodePollString(i+1)).queue();
+            message.addReaction(util.convertIntegerToUnicodePollString(i+1)).queue();
         }
     }
 
-    public static int[] GetListOfVotes()
+    public static int[] getListOfVotes()
     {
         return votes;
     }
 
-    public static void ClearVotes()
+    public static void clearVotes()
     {
         votes = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0 };
     }

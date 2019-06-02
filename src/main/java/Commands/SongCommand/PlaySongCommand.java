@@ -23,7 +23,7 @@ public class PlaySongCommand implements Command
         if(!args[0].startsWith("https://www.youtube.com/watch?v="))
         {
             Search url = new Search();
-            String urlToPlay = "https://www.youtube.com/watch?v=" + url.searchToUrl(util.ConvertArgListToSingleString(args, 0) + "lyrics", this.API_KEY);
+            String urlToPlay = "https://www.youtube.com/watch?v=" + url.searchToUrl(util.convertArgListToSingleString(args, 0) + "lyrics", this.API_KEY);
             MusicCommands.getInstance().play(urlToPlay, e);
         }
         else

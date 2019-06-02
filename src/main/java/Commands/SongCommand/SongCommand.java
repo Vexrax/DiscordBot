@@ -33,7 +33,7 @@ public class SongCommand implements Command
 
 	public void action(String[] args, MessageReceivedEvent e)
 	{
-		String[] cleanedArgs = Util.CleanArgs(args);
+		String[] cleanedArgs = Util.cleanArgs(args);
 		boolean safe = commands.get(args[0]).called(cleanedArgs, e);
 		if(safe)
 		{
