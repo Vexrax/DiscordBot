@@ -43,7 +43,7 @@ public class PollCommand implements Command
         e.getTextChannel().sendMessage("A poll has been started by "  + e.getAuthor().getName() + ". Use the reactions to vote on your choice.").queue();
         String[] pollOptions = getPollOptions(args);
         SetupPollTimer(pollOptions, e);
-        SendPollMessage(pollOptions, e);
+        sendPollMessage(pollOptions, e);
     }
 
     public String help()
@@ -56,7 +56,7 @@ public class PollCommand implements Command
 
     }
 
-    private void SendPollMessage(String[] args, MessageReceivedEvent e)
+    private void sendPollMessage(String[] args, MessageReceivedEvent e)
     {
         TextChannel objTextChannel = e.getTextChannel();
         EmbedBuilder embededMessageBuilder = getDefaultPollEmbedBuilder(args);
@@ -101,7 +101,7 @@ public class PollCommand implements Command
             @Override
             public void run()
             {
-                CalculatePollWinners(args, e);
+                calculatePollWinners(args, e);
                 SetPollAsInactive(args);
                 pollStarted = false;
             }}, voteTime);
@@ -123,10 +123,10 @@ public class PollCommand implements Command
         return pollStarted;
     }
 
-    private void  CalculatePollWinners(String[] args, MessageReceivedEvent e)
+    private void calculatePollWinners(String[] args, MessageReceivedEvent e)
     {
         int[] votes = PollListener.getListOfVotes();
-        ArrayList<Integer> winners = TallyVotes(votes);
+        ArrayList<Integer> winners = tallyVotes(votes);
         if (winners.size() > 1)
         {
             StringBuilder TiedStringBuilder = new StringBuilder();
@@ -143,7 +143,7 @@ public class PollCommand implements Command
         PollListener.clearVotes();
     }
 
-    private ArrayList<Integer> TallyVotes(int[] votes)
+    private ArrayList<Integer> tallyVotes(int[] votes)
     {
         ArrayList<Integer> winners = new ArrayList<Integer>();
         int winningValue = 0;

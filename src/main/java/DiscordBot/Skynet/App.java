@@ -52,7 +52,8 @@ public class App
 			System.out.println("exception caught: " + e);
 		}
     }
-	private static HashMap<String, String> getApiKeys()
+
+	public static HashMap<String, String> getApiKeys()
 	{
 		String path = API_KEY_PATH;
 		HashMap<String, String> APIkeys = new HashMap<String, String>();
@@ -100,6 +101,7 @@ public class App
     		}
     	}
     }
+
 }
 
 
