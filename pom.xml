@@ -11,17 +11,17 @@
   <url>http://maven.apache.org</url>
 
    <build>
-    <plugins>
-      <plugin>
+    <plugins>  
+	  <plugin>
         <groupId>org.codehaus.mojo</groupId>
           <artifactId>appassembler-maven-plugin</artifactId>
-          <version>1.1.1</version>
+          <version>1.10</version>
           <configuration>
             <assembleDirectory>target\classes\DiscordBot\Skynet</assembleDirectory>
             <programs>
                 <program>
                     <mainClass>app</mainClass>
-                    <name>worker</name>
+					<id>app</id>
                 </program>
             </programs>
           </configuration>
@@ -37,6 +37,8 @@
   
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -88,12 +90,12 @@
     <repository>
 		<id>central</id>
         <name>bintray</name>
-        <url>http://jcenter.bintray.com</url>
+        <url>https://jcenter.bintray.com</url>
     </repository>
 	<repository>
 		<id>jcenter</id>
 		<name>jcenter-bintray</name>
-		<url>http://jcenter.bintray.com</url>
+		<url>https://jcenter.bintray.com</url>
 	</repository>
   </repositories>
 </project>
