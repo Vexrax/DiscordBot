@@ -1,5 +1,8 @@
 package DiscordBot.Skynet.Backend;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,6 +15,7 @@ public class Util
     private String RankSheetPath = "Ranks.txt";
     private HashMap<Integer,  String> IntToUnicodeMap = new HashMap<Integer, String >();
     private HashMap<String, Integer> UnicodeToIntMap = new HashMap<String, Integer>();
+    private static MongoClient db;
 
 
     public Util()
@@ -128,5 +132,13 @@ public class Util
     public boolean isStringValidUnicodeEmoji(String string)
     {
         return UnicodeToIntMap.containsKey(string);
+    }
+
+    public MongoClient provideMongo() {
+        if( db == null) {
+            String uri = String.format("mongodb+srv://Dueces:%s@cluster0-mzmgc.mongodb.net/test?retryWrites=true&w=majority", System.getenv("MONGOPASSWORD"));
+            db = MongoClients.create(uri);
+        }
+        return this.db;
     }
 }

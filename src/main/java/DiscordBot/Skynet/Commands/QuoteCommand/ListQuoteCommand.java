@@ -4,10 +4,17 @@ package DiscordBot.Skynet.Commands.QuoteCommand;
 import DiscordBot.Skynet.Backend.Ranks;
 import DiscordBot.Skynet.Backend.Util;
 import DiscordBot.Skynet.Commands.Command;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Aggregates;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import org.bson.Document;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Arrays;
 
 import static DiscordBot.Skynet.Commands.QuoteCommand.QuoteCommand.quoteFilePath;
 
@@ -33,27 +40,22 @@ public class ListQuoteCommand implements Command {
     }
 
     private void listAllQuotes(MessageReceivedEvent e) {
-        try
-        {
-            int numberoflines = util.getFileLineLength(quoteFilePath);
-            StringBuilder builder = new StringBuilder();
-            BufferedReader textreaderforquotes = new BufferedReader(new FileReader(quoteFilePath));
-            for(int i = 0; i < numberoflines; i++)
+        MongoClient mongoClient = util.provideMongo();
+        FindIterable<Document> results = mongoClient.getDatabase("Skynet").getCollection("Quotes").find();
+        StringBuilder builder = new StringBuilder();
+        for(Document doc : results) {
+            //Discord only supports messages that are 2000 chars or less
+            if(builder.length() >= 1900)
             {
-                //Discord only supports messages that are 2000 chars or less
-                if(builder.length() >= 1900)
-                {
-                    e.getChannel().sendMessage(builder.toString()).queue();
-                    builder = new StringBuilder();
-                }
-                builder.append(textreaderforquotes.readLine() + "\r\n");
+                e.getChannel().sendMessage(builder.toString()).queue();
+                builder = new StringBuilder();
             }
-            textreaderforquotes.close();
-            e.getChannel().sendMessage(builder.toString()).queue();;
+            builder.append(String.format("'%s' -%s %s %s",
+                    doc.get("quote"),
+                    doc.get("author"),
+                    doc.get("context"),
+                    doc.get("year")) + "\r\n");
         }
-        catch (Exception exception)
-        {
-            e.getChannel().sendMessage(exception.getMessage()).queue();
-        }
+        e.getChannel().sendMessage(builder.toString()).queue();
     }
 }

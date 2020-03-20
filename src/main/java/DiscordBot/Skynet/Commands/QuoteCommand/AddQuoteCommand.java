@@ -3,13 +3,12 @@ package DiscordBot.Skynet.Commands.QuoteCommand;
 
 import DiscordBot.Skynet.Backend.Util;
 import DiscordBot.Skynet.Commands.Command;
+import com.mongodb.client.MongoClient;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import org.bson.Document;
+import org.json.JSONObject;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,12 +21,35 @@ public class AddQuoteCommand implements Command
 
     public boolean called(String[] args, MessageReceivedEvent e)
     {
-        return args.length > 0;
+        String author = "";
+        String date = "";
+        for(String arg : args) {
+            if(arg.startsWith("//") && author.length() == 0) {
+                author = arg;
+            }
+            else if(arg.startsWith("//") && date.length() == 0) {
+                date = arg;
+            }
+        }
+        return args.length > 0 && author.length() > 0 && date.length() > 0;
     }
 
     public void action(String[] args, MessageReceivedEvent e)
     {
-        addQuote(e, util.convertArgListToSingleString(args, 0));
+        String author = "";
+        String date = "";
+        StringBuilder quote = new StringBuilder();
+        for(String arg : args) {
+            if(arg.startsWith("//") && author.length() == 0) {
+                author = arg.replace("//", "");
+            }
+            else if(arg.startsWith("//") && date.length() == 0) {
+                date = arg.replace("//", "");
+            } else {
+                quote.append(arg + " ");
+            }
+        }
+        addQuote(e, quote.toString(), author, date);
     }
 
     public String help()
@@ -40,14 +62,14 @@ public class AddQuoteCommand implements Command
 
     }
 
-    public void addQuote(MessageReceivedEvent e, final String QuoteToBeAdded)
+    public void addQuote(MessageReceivedEvent e, final String QuoteToBeAdded, String author, String date)
     {
         final MessageChannel objChannel = e.getChannel();
         if (isVoteInProgress(objChannel)) return;
-        setUpVoteForQuoteBeingAdded(QuoteToBeAdded, objChannel);
+        setUpVoteForQuoteBeingAdded(QuoteToBeAdded, author, date, objChannel);
     }
 
-    private void setUpVoteForQuoteBeingAdded(final String QuoteToBeAdded, final MessageChannel objChannel)
+    private void setUpVoteForQuoteBeingAdded(final String QuoteToBeAdded, final String author, final String date, final MessageChannel objChannel)
     {
         quoteBeingAddedOrRemoved = true;
         objChannel.sendMessage("A vote for the quote:\n " +
@@ -59,7 +81,7 @@ public class AddQuoteCommand implements Command
             public void run() {
                 if(currentVotes >= requiredVotes)
                 {
-                    addQuoteToFile(objChannel, QuoteToBeAdded);
+                    addQuoteToDatabase(objChannel, QuoteToBeAdded, author, date);
                     objChannel.sendMessage("The vote passed, quote being added to quote list...").queue();
                 }
                 else
@@ -72,18 +94,20 @@ public class AddQuoteCommand implements Command
         }, voteTime);
     }
 
-    private void addQuoteToFile(MessageChannel channel, String QuoteToBeAdded)
+    private void addQuoteToDatabase(MessageChannel channel, String QuoteToBeAdded, String author, String date)
     {
-        try
-        {
-            Writer output;
-            output = new BufferedWriter(new FileWriter(quoteFilePath, true));
-            output.append("\r\n" + QuoteToBeAdded);
-            output.close();
-        }
-        catch (IOException e)
-        {
-            channel.sendMessage("IO Exception Caught!").queue();
-        }
+        MongoClient mongoClient = util.provideMongo();
+        Document document = Document.parse(formatForMongo(QuoteToBeAdded, author, date).toString());
+        mongoClient.getDatabase("Skynet").getCollection("Quotes").insertOne(document);
     }
+
+    private JSONObject formatForMongo(String QuoteToBeAdded, String author, String date) {
+        JSONObject document = new JSONObject();
+        document.put("quote", QuoteToBeAdded);
+        document.put("year", date);
+        document.put("author", author);
+        document.put("context", ""); // TODO handle context
+        return document;
+    }
+
 }

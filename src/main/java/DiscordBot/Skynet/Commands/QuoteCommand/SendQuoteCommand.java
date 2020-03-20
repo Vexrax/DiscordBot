@@ -3,14 +3,19 @@ package DiscordBot.Skynet.Commands.QuoteCommand;
 
 import DiscordBot.Skynet.Backend.Util;
 import DiscordBot.Skynet.Commands.Command;
+
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Aggregates;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import org.bson.Document;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-
-import static DiscordBot.Skynet.Commands.QuoteCommand.QuoteCommand.quoteFilePath;
+import javax.print.Doc;
+import java.util.Arrays;
 
 public class SendQuoteCommand implements Command
 {
@@ -35,22 +40,17 @@ public class SendQuoteCommand implements Command
     public void sendQuoteToChannel(MessageReceivedEvent e)
     {
         MessageChannel objChannel = e.getChannel();
-        try
-        {
-            int numberoflines = util.getFileLineLength(quoteFilePath);
-            String[] quotearray = new String[numberoflines];
-            BufferedReader textreaderforquotes = new BufferedReader(new FileReader(quoteFilePath));
-            for(int i = 0; i < numberoflines; i++)
-            {
-                quotearray[i] = textreaderforquotes.readLine();
-            }
-            objChannel.sendMessage(quotearray[(int)(Math.random()*numberoflines)]).queue();
-            textreaderforquotes.close();
+        MongoClient mongoClient = util.provideMongo();
+        MongoCollection<Document> results = mongoClient.getDatabase("Skynet").getCollection("Quotes");
+        Document randomQuote = results.aggregate(Arrays.asList(Aggregates.sample(1))).first();
+        String output = String.format("'%s' -%s %s %s",
+                randomQuote.get("quote"),
+                randomQuote.get("author"),
+                randomQuote.get("context"),
+                randomQuote.get("year")
+                );
+        objChannel.sendMessage(output).queue();
 
-        }
-        catch(IOException exception)
-        {
-            objChannel.sendMessage("Somethng went wrong, missing quotefile string, check App.java").queue();
-        }
+
     }
 }

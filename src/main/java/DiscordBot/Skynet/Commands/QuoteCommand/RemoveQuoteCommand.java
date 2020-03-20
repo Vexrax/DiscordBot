@@ -3,10 +3,12 @@ package DiscordBot.Skynet.Commands.QuoteCommand;
 
 import DiscordBot.Skynet.Backend.Util;
 import DiscordBot.Skynet.Commands.Command;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.result.DeleteResult;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import org.bson.Document;
 
-import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -40,35 +42,8 @@ public class RemoveQuoteCommand implements Command
         //if(true)return;
 
         if (isVoteInProgress(objChannel)) return;
-        if(!isQuoteInFile(quoteToRemove))
-        {
-            objChannel.sendMessage("Quote not found in quote file, quote must be formatted exactly how it appears in the file.").queue();
-            return;
-        }
+
         setUpVoteForQuoteBeingRemoved(quoteToRemove, objChannel);
-    }
-
-    private boolean isQuoteInFile(String quoteToRemove)
-    {
-        try
-        {
-            String trimmedQuoteToRemove = quoteToRemove.trim();
-            File inputFile = new File(quoteFilePath);
-            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-            String currentLine;
-            while ((currentLine = reader.readLine()) != null)
-            {
-                String trimmedLine = currentLine.trim();
-                if (trimmedLine.equals(trimmedQuoteToRemove))
-                    return true;
-            }
-            reader.close();
-        }
-        catch (IOException exception)
-        {
-
-        }
-        return false;
     }
 
     private void setUpVoteForQuoteBeingRemoved(final String QuoteToBeRemoved, final MessageChannel objChannel)
@@ -83,7 +58,7 @@ public class RemoveQuoteCommand implements Command
             public void run() {
                 if(currentVotes >= requiredVotes)
                 {
-                    removeQuoteFromFile(objChannel, QuoteToBeRemoved);
+                    removeQuoteFromDatabase(objChannel, QuoteToBeRemoved);
                     objChannel.sendMessage("The vote passed, quote being removed from quote list...").queue();
                 }
                 else
@@ -96,31 +71,14 @@ public class RemoveQuoteCommand implements Command
         }, voteTime);
     }
 
-    public void removeQuoteFromFile(MessageChannel objChannel, String quoteToRemove)
+    public void removeQuoteFromDatabase(MessageChannel objChannel, String quoteToRemove)
     {
-        try
-        {
-            File inputFile = new File(quoteFilePath);
-            File tempFile = new File("myTempFile.txt");
-
-            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-            String currentLine;
-
-            while ((currentLine = reader.readLine()) != null) {
-                String trimmedQuoteToRemove = quoteToRemove.trim();
-                String trimmedLine = currentLine.trim();
-                if (trimmedLine.equals(trimmedQuoteToRemove)) continue;
-                writer.write(currentLine + System.getProperty("line.separator"));
-            }
-            writer.close();
-            reader.close();
-            tempFile.renameTo(inputFile);
-
-        }
-        catch (Exception exception)
-        {
-            objChannel.sendMessage("An Error occured: " + exception.toString()).queue();
+        MongoClient mongoClient = util.provideMongo();
+        DeleteResult deleteResult = mongoClient.getDatabase("Skynet").getCollection("Quotes").deleteOne(new Document("quote", quoteToRemove));
+        if(deleteResult.getDeletedCount() > 0) {
+            objChannel.sendMessage("Removing quote from list").queue();
+        } else {
+            objChannel.sendMessage("Quote could not be found").queue();
         }
     }
 }
